@@ -11,7 +11,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5068765)](https://doi.org/10.5281/zenodo.5068765)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5068765.svg)](https://doi.org/10.5281/zenodo.5068765)
 [![Codecov test
 coverage](https://codecov.io/gh/dataobservatory-eu/dataobservatory/branch/master/graph/badge.svg)](https://codecov.io/gh/dataobservatory-eu/dataobservatory?branch=master)
 [![Follow
