@@ -11,6 +11,8 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Codecov test
+coverage](https://codecov.io/gh/dataobservatory-eu/dataobservatory/branch/master/graph/badge.svg)](https://codecov.io/gh/dataobservatory-eu/dataobservatory?branch=master)
 [![Follow
 author](https://img.shields.io/twitter/follow/antaldaniel.svg?style=social)](https://twitter.com/intent/follow?screen_name=antaldaniel)
 [![Follow
@@ -87,6 +89,48 @@ summary(small_population_dataset)
 #>  3rd Qu.:2016-07-02   3rd Qu.:57462  
 #>  Max.   :2020-01-01   Max.   :84484  
 #> Source: greendeal.dataobservatory.eu
+```
+
+``` r
+small_population_datacite <- datacite_dataset(
+  dataset = small_population_dataset,
+  Subject = "Demography",
+  Creator = "Joe, Doe")
+```
+
+``` r
+is.dataset(small_population_dataset)
+#> [1] TRUE
+is.datacite(small_population_datacite)
+#> [1] TRUE
+```
+
+``` r
+print(small_population_datacite)
+#> DataCite information for Population of Small European Countries 
+#> # A tibble: 20 x 2
+#>    Property        Value                                                        
+#>    <chr>           <chr>                                                        
+#>  1 dataset_code    "small_population_total"                                     
+#>  2 Identifier      "small_population_total"                                     
+#>  3 Creator         "Joe, Doe"                                                   
+#>  4 Title           "Population of Small European Countries"                     
+#>  5 Publisher       "Reprex"                                                     
+#>  6 PublicationYear "2021"                                                       
+#>  7 ResourceType    "Dataset"                                                    
+#>  8 Subject         "Demography"                                                 
+#>  9 Contributor      <NA>                                                        
+#> 10 Date            "{\"Updated\":[\"2021-07-04\"],\"EarliestObservation\":[\"20~
+#> 11 Language        "eng"                                                        
+#> 12 RelatedIdentif~  <NA>                                                        
+#> 13 Size            "1576 bytes in CSV format"                                   
+#> 14 Format           <NA>                                                        
+#> 15 Version          <NA>                                                        
+#> 16 Rights          "{\"rightsIdentifier\":[\"CC-BY-NC-SA-4.0\"],\"rightsURI\":[~
+#> 17 Description      <NA>                                                        
+#> 18 GeoLocation     "{\"geoLocationPlace\":[null],\"geoCodes\":[\"LI|AD|SM\"]}"  
+#> 19 FundingReferen~  <NA>                                                        
+#> 20 RelatedItem      <NA>
 ```
 
 Please note that the `dataobservatory` project is released with a

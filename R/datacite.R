@@ -119,25 +119,47 @@ datacite <- function (
 #' @export
 
 datacite_dataset <- function(dataset,
-                             dataset_code,
+                             dataset_code = NULL,
                              Title = NULL,
                              Subject = NULL,
                              Creator,
-                             Contributor ) {
+                             Contributor = NULL ) {
 
-  if ( is.null(Title)) Title <- attr(dataset, "Title")
-  if ( is.null(Subject)) Subject <- attr(dataset, "Subject")
+  if ( is.null(dataset_code)) {
+    dataset_code <- attr(dataset, "dataset_code")
+    assertthat::assert_that(
+      !is.null(dataset_code),
+      msg = "The dataset_code must not be NULL."
+      )
+  }
+  if ( is.null(Title)) {
+    Title <- attr(dataset, "Title")
+    assertthat::assert_that(
+      !is.null(Title),
+      msg = "The Title must not be NULL."
+    )
+    }
+  if ( is.null(Subject)) {
+    Subject <- attr(dataset, "Subject")
+    assertthat::assert_that(
+      !is.null(Subject),
+      msg = "The Subject must not be NULL."
+    )
+    }
+
+  dates_to_add <- add_dates (
+    Date = Sys.Date(),
+    EarliestObservation = attr(dataset, "earliest_actual_observation"),
+    LatestObservation =   attr(dataset, "latest_actual_observation")
+    )
 
   datacite (
-    dataset_code = attr(dataset, "dataset_code"),
+    dataset_code = dataset_code,
     Title = Title,
     Subject = Subject,
     Creator = Creator,
     Contributor = NA_character_,
-    Date = add_dates ( Date = Sys.Date(),
-                       EarliestObservation = attr(dataset, "earliest_actual_observation"),
-                       LatestObservation =   attr(dataset, "latest_actual_observation")
-    ),
+    Date = dates_to_add,
     Size = add_size(dataset),
     GeoLocation = add_geolocation(dataset)
   )
@@ -232,6 +254,45 @@ datacite_new    <- function (
 
   datacite
 }
+
+
+#' @rdname datacite
+#' @export
+is.datacite <- function (x) inherits(x, "datacite")
+
+#' @rdname datacite
+#' @param n The number of observations to print.
+#' @importFrom dplyr mutate_all everything
+#' @importFrom tidyr pivot_longer
+#' @importFrom jsonlite fromJSON
+#' @export
+print.datacite <- function(x, ... ) {
+
+  attributes ( x )
+
+
+  main_title <- x$Title
+  if (is.json(main_title)) {
+    title_list <- jsonlite::fromJSON(main_title)
+    main_title <- title_list$Title
+  }
+
+  cat("DataCite information for", main_title, "\n")
+  json_items <- vapply (x, is.json, logical(1))
+  not_json_items <- names(x)[!json_items]
+
+  long_form <- x %>%
+               dplyr::mutate_all ( as.character ) %>%
+               pivot_longer ( dplyr::everything(),
+                              values_to = "Value",
+                              names_to = "Property")
+
+
+  print (long_form)
+
+
+}
+
 
 #' @title Validate a datacite object.
 #' @inheritParams datacite

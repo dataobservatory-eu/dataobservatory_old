@@ -3,6 +3,8 @@
 \name{datacite}
 \alias{datacite}
 \alias{datacite_dataset}
+\alias{is.datacite}
+\alias{print.datacite}
 \title{DataCite object}
 \usage{
 datacite(
@@ -30,12 +32,16 @@ datacite(
 
 datacite_dataset(
   dataset,
-  dataset_code,
+  dataset_code = NULL,
   Title = NULL,
   Subject = NULL,
   Creator,
-  Contributor
+  Contributor = NULL
 )
+
+is.datacite(x)
+
+\method{print}{datacite}(x, ...)
 }
 \arguments{
 \item{dataset_code}{A short, unique, programatically usable, memorizable dataset
@@ -78,6 +84,8 @@ will be added to the metadata object.}
 
 \item{Geolocation}{The geographical dimension of the observation in the dataset,
 created by \code{\link{add_geolocation}}.}
+
+\item{n}{The number of observations to print.}
 }
 \value{
 A data frame of DataCite properties are variable columns.

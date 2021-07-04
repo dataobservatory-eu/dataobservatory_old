@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 [![Project Status: Active. The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Codecov test coverage](https://codecov.io/gh/dataobservatory-eu/dataobservatory/branch/master/graph/badge.svg)](https://codecov.io/gh/dataobservatory-eu/dataobservatory?branch=master)
 [![Follow author](https://img.shields.io/twitter/follow/antaldaniel.svg?style=social)](https://twitter.com/intent/follow?screen_name=antaldaniel)
 [![Follow rOpenGov](https://img.shields.io/twitter/follow/ropengov.svg?style=social)](https://twitter.com/intent/follow?screen_name=ropengov)
 <!-- badges: end -->
@@ -56,14 +57,30 @@ small_population_dataset <- dataset (x= small_population,
 
 What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
-```{r print}
+```{r print-dataset}
 small_population_dataset
 ```
 
-```{r summary}
+```{r summary-dataset}
 summary(small_population_dataset)
-``````
+```
 
+```{r cite-dataset}
+small_population_datacite <- datacite_dataset(
+  dataset = small_population_dataset,
+  Subject = "Demography",
+  Creator = "Joe, Doe")
+```
+
+
+```{r class-inheritance}
+is.dataset(small_population_dataset)
+is.datacite(small_population_datacite)
+```
+
+```{r print-datacite}
+print(small_population_datacite)
+```
 
 
 Please note that the `dataobservatory` project is released with a [Contributor Code of Conduct](https://www.contributor-covenant.org/version/2/0/code_of_conduct/). By contributing to this project, you agree to abide by its terms.

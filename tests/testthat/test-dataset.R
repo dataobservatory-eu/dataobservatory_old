@@ -7,8 +7,14 @@ small_population_dataset <- dataset (x= small_population,
                                      unit = "NR",
                                      unit_name = "number")
 
-datacite_create(small_population)
+small_population_datacite <- datacite_dataset(
+  dataset = small_population_dataset,
+  Subject = "Demography",
+  Creator = "Joe, Doe")
 
+is.datacite(small_population_datacite)
+
+print (small_population_datacite)
 create_codebook <- function(dataset_to_code = small_population_dataset){
 
 
@@ -32,14 +38,15 @@ create_codebook <- function(dataset_to_code = small_population_dataset){
 }
 
 
-
-
 test_that("dataset is created", {
   expect_equal(unique(small_population_dataset$unit), "NR")
   expect_equal(unique(small_population_dataset$freq), "A")
   expect_equal(unique(small_population_dataset$dataset_code), "small_population_total")
-  expect_equal(attr(small_population_dataset, "observatory"), "greendeal.dataobservatory.eu")
+  expect_equal(attr(small_population_dataset, "source"), "greendeal.dataobservatory.eu")
   expect_equal(names(attributes(small_population_dataset)),
-               c("names","row.names", "class", "observatory","earliest_actual_observation",
+               c("names","row.names", "class",
+                 "dataset_code", "Title",
+                 "source", "unit_name", "updated",
+                 "earliest_actual_observation",
                    "latest_actual_observation"))
 })

@@ -274,15 +274,17 @@ validate_identifier <- function (Identifier) {
   error_msg_few_parameters <- glue::glue(
     "The identifier object may have at least two of the following fields:{ allowed_types }.")
 
-
-  identifier_list <- jsonlite::fromJSON(Identifier)
+  if ( is.json(Identifier) ) {
+    identifier_list <- jsonlite::fromJSON(Identifier)
+  } else {
+    identifier_list <- Identifier
+  }
 
   assertthat::assert_that(is.list(identifier_list),
                           msg = "The identifier must be given as a list or a json object.")
 
   assertthat::assert_that(length(identifier_list)>1,
                           msg = error_msg_few_parameters)
-
 
   not_allowed_id <- names(identifier_list) [! names(identifier_list) %in% allowed_identifier_types]
   error_msg_wrong_id <- glue::glue("{not_allowed_id} is not among allowed fields:{ allowed_types }.")
@@ -322,7 +324,7 @@ add_related_items <- function (
 
   resource_types <- resource_types_datacite()
   relation_types <- relation_type_datacite()
-  validate_identifier(relatedItemIdentifier)
+  validate_identifier(Identifier  = relatedItemIdentifier)
 
   #relation_types_document <- paste0("\\code{", relation_types, "}")
   #paste (relation_types_document, collapse = ", " )
@@ -372,12 +374,12 @@ add_related_items <- function (
 #' @keywords internal
 validate_related_item <- function(RelatedItem) {
 
-  if (is.json(related_item)) related_item <- jsonlite::fromJSON(related_item)
+  if (is.json(RelatedItem)) RelatedItem <- jsonlite::fromJSON(RelatedItem)
 
   related_item_fields <- c("RelatedItem", "relatedItemType", "relationType", "relatedItemIdentifier")
 
   assertthat::assert_that(
-    all(names (related_item) %in% related_item_fields),
+    all(names (RelatedItem) %in% related_item_fields),
     msg = paste0("The related items must have the following fields: ",
                  paste(related_item_fields, collapse = ", "))
   )
