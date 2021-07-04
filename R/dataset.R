@@ -1,13 +1,24 @@
 #' @title dataset for an Automated Data Observatory
 #' @description The class inherits all methods from a data frame, but has
 #' many fixed attributes.
+#'
+#' @details
+#' The attributes of the dataset are
+#' \describe{
+#'   \item{dataset_code}{The dataset_code id.}
+#'   \item{Title}{The title of the dataaset.}
+#'   \item{source}{The data source information.}
+#'   \item{unit_name}{The name of the unit variable, which is recorded by its id in the dataset.}
+#'   \item{sessionInfo}{The session information added by \code{\link{add_sessioninfo}}.}
+#' }
 #' @param x A data frame
-#' @param dataset_code dataset_code
-#' @param dataset_title A title
+#' @param dataset_code A unique dataset id code.
+#' @param dataset_title A title, which should be the main Title if there are several titles
+#' given by \code{\link{add_titles}}.
 #' @param freq A frequency variable coded with \code{\link{add_frequency}}.
-#' @param unit A unit
-#' @param unit_name A unit name
-#' @param source A source
+#' @param unit A standardized unit id.
+#' @param unit_name A unit name.
+#' @param source A source, currently defaults to \code{"greendeal.dataobservatory.eu"}.
 #' @importFrom assertthat assert_that
 #' @importFrom tibble as_tibble
 #' @importFrom stringr word
@@ -51,7 +62,7 @@ dataset <- function(x,
                freq = freq,
                unit = unit,
                unit_name = unit_name,
-               source)
+               source=source)
 
 }
 
@@ -189,6 +200,7 @@ new_dataset <- function(x,
   attr(new_dataset, "earliest_actual_observation") <- min(actual_observations$time, na.rm=TRUE)
   attr(new_dataset, "latest_actual_observation")   <- max(actual_observations$time, na.rm=TRUE)
 
+  attr(new_dataset, "sessionInfo") <- add_sessioninfo()
   new_dataset
 }
 

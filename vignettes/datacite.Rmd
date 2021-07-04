@@ -1,0 +1,109 @@
+---
+title: "DataCite Descriptive Metadata"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DataCite Descriptive Metadata}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `datacite` class (see `?datacite()`) is a modification of a data frame (tibble) object, and it creates all the mandatory and recommended fields of the [DataCite](https://support.datacite.org/docs/datacite-metadata-schema-v44-properties-overview) metadata schema for a dataset.  It also covers all the properties in the more general Dublin Core standard, but in some cases, the property name is different (and follows the DataCite naming convention.)  
+
+The `datacite` class is equipped with a construction and helper functions that create the more complex metadata properties as JSON (default) or list objects. Not all the helper functions are fully validated, but a fully datacite object can be easily obtained. 
+
+```{r setup, echo=FALSE, message=TRUE}
+library(dataobservatory, quietly = TRUE)
+data("small_population")
+small_population_dataset <- dataset (x= small_population,
+                                     dataset_code = "small_population_total",
+                                     dataset_title = "Population of Small European Countries",
+                                     freq = "A",
+                                     unit = "NR",
+                                     unit_name = "number")
+
+attributes (small_population_dataset)
+```
+
+The `datacite_dataset()` function fills out the `datacite` object with default properties. There are some properties where no default is given, these properties are also recorded in the `dataset` class as attributes.
+
+```{r}
+small_population_datacite <- datacite_dataset(
+  dataset = small_population_dataset,
+  Subject = "Demography",
+  Creator = "Joe, Doe")
+```
+
+```{r}
+small_population_dataset
+```
+
+```{r}
+small_population_datacite
+```
+```{r}
+is.datacite(small_population_datacite)
+```
+
+
+## Complex Properties
+
+The Creator property may have affiliation data, and ORCiD identifier present, By default, we create a json representation:
+
+```{r}
+jane <- add_creators("Jane", "Doe", affiliation = "Green Deal Data Observatory")
+jane
+```
+
+
+## Working with lists
+
+There are many Properties which can form a list.  For example, there may be several related items present.
+
+```{r}
+relitems <- add_related_items(
+  RelatedItem = "Population on 1 January by age and sex", 
+  relatedItemIdentifier = add_identifiers(
+    id = "demo_pjan", 
+    URI = "https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_pjan/"
+  ))
+
+relitems
+```
+```{r}
+package_citation <- citation("dataobservatory")
+relitems <- add_related_items(
+  RelatedItem = package_citation$title, 
+  relatedItemIdentifier = add_identifiers(
+    id = "dataobservatory", 
+    Version = package_citation$note),
+    related_items = relitems
+  )
+
+relitems
+```
+
+
+
+
+
+
+```{r}
+print(small_population_datacite)
+```
+
+```{r}
+small_population_datacite$RelatedItem <- create_json_text(as.list(relitems))
+```
+
+
+```{r}
+small_population_datacite
+```
+

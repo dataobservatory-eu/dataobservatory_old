@@ -1,0 +1,71 @@
+---
+title: "The codebook Class"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The codebook Class}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=TRUE}
+library(dataobservatory, quietly = TRUE)
+data("small_population")
+small_population_dataset <- dataset (x= small_population,
+                                     dataset_code = "small_population_total",
+                                     dataset_title = "Population of Small European Countries",
+                                     freq = "A",
+                                     unit = "NR",
+                                     unit_name = "number")
+```
+
+The `codebook` S3 class (not yet fully documented and does not have yet and independent constructor) records the statistical processing metadata of a dataset. It as a print method.
+
+It contains a full codebook following SDMX statistical metadata codelist standards, furthermore, it records the Session Information of all processing steps, and adds to the descriptive metadata the R packages or software code that generated the results.
+
+```{r}
+small_population_codebook <- codebook_dataset (small_population_dataset)
+is.codebook(small_population_codebook)
+small_population_codebook
+```
+
+
+## Frequency of Observation {#freq}
+
+For example, the annual observations follow the [SDMX Code List for Frequency 2.1 (CL_FREQ)](https://sdmx.org/?page_id=3215/)) definition, and they can be translated to the `ISO 8106` time metadata standard, too.
+
+```{r}
+add_frequency("A", "list")
+```
+## Observation Status {#obs_status}
+
+The `add_obs()` implements the [SDMX Code List for Observation Status 2.2 (CL_OBS_STATUS)](https://sdmx.org/?sdmx_news=new-version-of-code-list-for-observation-status-version-2-2) defintiion for observation status. 
+
+Furthermore, with **E**stimated values and **I**mputed values, the software code and computational environment information can be recoded (with `add_related_items()`).
+
+```{r}
+add_obs("E", "list")
+```
+
+## Unit information {#unit}
+
+Only Eurostat uses hundreds of codelists, most of them for various measurement information. Currently the unit information is not validated in the package. However, this is not a problem when data is imported from other statistical services, because they apply appropriate unit information.
+
+```{r unit-info}
+add_unit("M_EUR", "Million euros", 
+         admin_format = 'list')
+```
+## Consolidated Coodbook
+
+```{r}
+consolidated_codebook <- codebook()
+is.codebook(consolidated_codebook)
+print(consolidated_codebook)
+```
+

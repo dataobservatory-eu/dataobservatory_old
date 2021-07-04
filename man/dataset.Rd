@@ -26,23 +26,34 @@ is.dataset(x)
 \arguments{
 \item{x}{A data frame}
 
-\item{dataset_code}{dataset_code}
+\item{dataset_code}{A unique dataset id code.}
 
-\item{dataset_title}{A title}
+\item{dataset_title}{A title, which should be the main Title if there are several titles
+given by \code{\link{add_titles}}.}
 
 \item{freq}{A frequency variable coded with \code{\link{add_frequency}}.}
 
-\item{unit}{A unit}
+\item{unit}{A standardized unit id.}
 
-\item{unit_name}{A unit name}
+\item{unit_name}{A unit name.}
 
-\item{source}{A source}
+\item{source}{A source, currently defaults to \code{"greendeal.dataobservatory.eu"}.}
 
 \item{n}{The number of observations to print.}
 }
 \description{
 The class inherits all methods from a data frame, but has
 many fixed attributes.
+}
+\details{
+The attributes of the dataset are
+\describe{
+\item{dataset_code}{The dataset_code id.}
+\item{Title}{The title of the dataaset.}
+\item{source}{The data source information.}
+\item{unit_name}{The name of the unit variable, which is recorded by its id in the dataset.}
+\item{sessionInfo}{The session information added by \code{\link{add_sessioninfo}}.}
+}
 }
 \examples{
 

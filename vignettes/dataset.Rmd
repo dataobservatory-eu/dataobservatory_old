@@ -1,0 +1,48 @@
+---
+title: "The dataset Class"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The dataset Class}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+library(dataobservatory, quietly = TRUE)
+```
+
+The `dataset` S3 class is an extension of the data frame and tibble class.  It has some important metadata attributes that help the documentation of the dataset. Furthermore, it has an adequate `print` and `summary` method.
+
+```{r small-population, echo=FALSE, message=FALSE, warning=FALSE}
+data("small_population")
+small_population_dataset <- dataset (x= small_population,
+                                     dataset_code = "small_population_total",
+                                     dataset_title = "Population of Small European Countries",
+                                     freq = "A",
+                                     unit = "NR",
+                                     unit_name = "number")
+
+attributes (small_population_dataset)
+```
+```{r}
+print(small_population_dataset)
+```
+```{r}
+summary(small_population_dataset)
+```
+```{r}
+is.dataset(small_population_dataset)
+```
+## Adding Metadata
+
+The descriptive metadata can be added with the `datacite()` constructor (see: `?datacite` ) or the `datacite_dataset()` helper function. or read the [DataCite Descriptive Metadata](http://r.dataobservatory.eu/articles/datacite.html) vignette article.
+
+The statistical processing information can be added with the not fully implemented `codebook` class. Read the [The codebook Class](http://r.dataobservatory.eu/articles/codebook.html) vignette article.
+

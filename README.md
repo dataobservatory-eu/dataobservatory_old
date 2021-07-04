@@ -37,9 +37,12 @@ And the development version from [GitHub](https://github.com/) with:
 devtools::install_github("dataobservatory-eu/dataobservatory")
 ```
 
-## Example
+## The dataset Class
 
-This is a basic example which shows you how to solve a common problem:
+The `dataset` S3 class is an extension of the data frame and tibble
+class. It has some important metadata attributes that facilitate the
+automated documentation of the dataset. Furthermore, it has an adequate
+`print` and `summary` method.
 
     #> Registered S3 method overwritten by 'quantmod':
     #>   method            from
@@ -47,9 +50,6 @@ This is a basic example which shows you how to solve a common problem:
     #> Registered S3 method overwritten by 'tune':
     #>   method                   from   
     #>   required_pkgs.model_spec parsnip
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
 
 ``` r
 small_population_dataset
@@ -98,12 +98,32 @@ small_population_datacite <- datacite_dataset(
   Creator = "Joe, Doe")
 ```
 
-``` r
-is.dataset(small_population_dataset)
-#> [1] TRUE
-is.datacite(small_population_datacite)
-#> [1] TRUE
-```
+## Descriptive Metadata
+
+The `datacite` class (see `?datacite()`) is a modification of a data
+frame (tibble) object, and it creates all the mandatory and recommended
+fields of the
+[DataCite](https://support.datacite.org/docs/datacite-metadata-schema-v44-properties-overview)
+metadata schema for a dataset. It also covers all the properties in the
+more general Dublin Core standard, but in some cases, the property name
+is different (and follows the DataCite naming convention.)
+
+The descriptive metadata can be added with the `datacite()` constructor
+(see: `?datacite` ) or the `datacite_dataset()` helper function. or read
+the [DataCite Descriptive
+Metadata](http://r.dataobservatory.eu/articles/datacite.html) vignette
+article.
+
+The `datacite` class can automatically connected to many scientific
+repositories, including Zenodo. In later versions, this will enable the
+user to upload the new created dataset (version) and receive a digital
+object identifier (version), or DOI(version) for the dataset.
+
+See more about the metadata concepts applied in the [FAIR Data and the
+Added Value of Rich
+Metadata](https://contributors.dataobservatory.eu/FAIR-data.html)
+chatper of the [Automated Observatory Contributors’
+Handbook](https://contributors.dataobservatory.eu/).
 
 ``` r
 print(small_population_datacite)
@@ -132,6 +152,52 @@ print(small_population_datacite)
 #> 19 FundingReferen~  <NA>                                                        
 #> 20 RelatedItem      <NA>
 ```
+
+## Administrative Metadata
+
+The statistical processing information can be added with the not fully
+implemented `codebook` class. Read the [The codebook
+Class](http://r.dataobservatory.eu/articles/codebook.html) vignette
+article.
+
+The `codebook` S3 class (not yet fully documented and does not have yet
+and independent constructor) records the statistical processing metadata
+of a dataset.
+
+It contains a full codebook following SDMX statistical metadata codelist
+standards, furthermore, it records the Session Information of all
+processing steps, and adds to the descriptive metadata the R packages or
+software code that generated the results.
+
+For example, the annual observations follow the [SDMX Code List for
+Frequency 2.1 (CL\_FREQ)](https://sdmx.org/?page_id=3215/)) definition,
+and they can be translated to the `ISO 8106` time metadata standard,
+too.
+
+``` r
+add_frequency("A", "list")
+#> $id
+#> [1] "A"
+#> 
+#> $name
+#> [1] "Annual"
+#> 
+#> $description
+#> [1] "To be used for data collected or disseminated every year"
+#> 
+#> $iso8106
+#> [1] "P1Y"
+#> 
+#> $RelatedItem
+#> [1] "{\"RelatedItem\":[\"SDMX Code List for Frequency\"],\"relatedItemType\":[\"Dataset\"],\"relationType\":[\"IsDocumentedBy\"],\"relatedItemIdentifier\":[\"{\\\"id\\\":[\\\" CL_FREQ\\\"],\\\"dataset_code\\\":{},\\\"URI\\\":[\\\"https://sdmx.org/?page_id=3215/\\\"],\\\"DOI\\\":{},\\\"Version\\\":[\\\"2.1\\\"],\\\"idAtSource\\\":{},\\\"Other\\\":{}}\"]}"
+```
+
+``` r
+add_sessioninfo()
+#> [1] "{\"platform\":[\"x86_64-w64-mingw32/x64 (64-bit)\"],\"locale\":[\"LC_COLLATE=English_United States.1252;LC_CTYPE=English_United States.1252;LC_MONETARY=English_United States.1252;LC_NUMERIC=C;LC_TIME=English_United States.1252\"],\"running\":[\"Windows 10 x64 (build 17763)\"],\"RNGkind\":[\"Mersenne-Twister\",\"Inversion\",\"Rejection\"],\"basePkgs\":[\"stats\",\"graphics\",\"grDevices\",\"utils\",\"datasets\",\"methods\",\"base\"],\"matprod\":[\"default\"],\"BLAS\":[\"\"],\"LAPACK\":[\"\"],\"system.codepage\":[\"1250\"],\"codepage\":[\"1252\"]}"
+```
+
+## Contributor Code of Conduct
 
 Please note that the `dataobservatory` project is released with a
 [Contributor Code of

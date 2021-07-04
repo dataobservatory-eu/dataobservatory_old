@@ -102,7 +102,16 @@ add_obs <- function(id, admin_format = 'id') {
   add_admin_metadata(id, .f='cl_obs_status', admin_format = admin_format)
 }
 
-
+#' @title Add session information
+#'
+#' @description Converts \code{\link{[utils](sessionInfo)}} into a JSON text.
+#' @importFrom utils sessionInfo
+#' @return A JSON text.
+#' @export
+add_sessioninfo <- function() {
+  si <- sessionInfo()
+  create_json_text ( si [vapply (si, is.character, logical(1))])
+}
 
 #' @importFrom tibble tribble
 #' @keywords interna
@@ -307,3 +316,5 @@ cl_method <-function () {
 
 
 }
+
+
