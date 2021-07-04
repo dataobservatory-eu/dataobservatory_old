@@ -1,0 +1,36 @@
+Package: dataobservatory
+Title: Tidy and Documented Datasets
+Version: 0.0.0.9000
+Date: 2021-07-04
+Authors@R:
+    c(person("Daniel", "Antal", role = c("aut", "cre"),
+             email = "daniel.antal@dataobservatory.eu", 
+             comment = c(ORCID = "0000-0001-7513-6760")),
+      person(given = "Kasia",
+             family = "Kulma",
+             role = "ctb", 
+             comment = c(ORCID = "0000-0002-2952-9720")),
+      person(given = "Pyry",
+             family = "Kantanen", 
+             role = "ctb"))
+Maintainer: Daniel Antal <daniel.antal@dataobservatory.eu>  
+Description: What the package does (one paragraph).
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    assertthat,
+    dplyr,
+    jsonlite,
+    magrittr,
+    purrr,
+    rlang,
+    stringr,
+    tibble,
+    tidyr,
+    zoo
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
