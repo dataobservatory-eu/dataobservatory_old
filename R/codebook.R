@@ -8,8 +8,6 @@
 #' codebook()
 #' @export
 codebook <- function() {
-
-
   codebook_obs_status <- cl_obs_status() %>%
     mutate ( dataset_code = "dataobservatory_consolidated_codebook",
              var_name = "obs_status")

@@ -1,20 +1,17 @@
 Package: dataobservatory
 Title: Tidy and Documented Datasets
-Version: 0.0.0.9000
+Version: 0.1.0
 Date: 2021-07-04
 Authors@R:
     c(person("Daniel", "Antal", role = c("aut", "cre"),
              email = "daniel.antal@dataobservatory.eu", 
-             comment = c(ORCID = "0000-0001-7513-6760")),
-      person(given = "Kasia",
-             family = "Kulma",
-             role = "ctb", 
-             comment = c(ORCID = "0000-0002-2952-9720")),
-      person(given = "Pyry",
-             family = "Kantanen", 
-             role = "ctb"))
+             comment = c(ORCID = "0000-0001-7513-6760")))
 Maintainer: Daniel Antal <daniel.antal@dataobservatory.eu>  
-Description: What the package does (one paragraph).
+Description: The goal of dataobservatory is to facilitate 
+     the automated documentation, and the automated recording of descriptive 
+     (DataCite and Dublin Core) and administrative (statistical processing SXDX) 
+     metadata for datasets. It also helps recording information about the 
+     computational environment to increase reproducability.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

@@ -1,3 +1,7 @@
-# dataobservatory 0.0.0.9000
+# dataobservatory 0.1.0
 
-* Added a `NEWS.md` file to track changes to the package.
+* The goal of dataobservatory is to facilitate 
+     the automated documentation, and the automated recording of descriptive 
+     (DataCite and Dublin Core) and administrative (statistical processing SXDX) 
+     metadata for datasets. It also helps recording information about the 
+     computational environment to increase reproducability.

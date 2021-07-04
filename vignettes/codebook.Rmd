@@ -35,7 +35,6 @@ is.codebook(small_population_codebook)
 small_population_codebook
 ```
 
-
 ## Frequency of Observation {#freq}
 
 For example, the annual observations follow the [SDMX Code List for Frequency 2.1 (CL_FREQ)](https://sdmx.org/?page_id=3215/)) definition, and they can be translated to the `ISO 8106` time metadata standard, too.
