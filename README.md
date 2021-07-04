@@ -11,6 +11,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5068765)](https://doi.org/10.5281/zenodo.5068765)
 [![Codecov test
 coverage](https://codecov.io/gh/dataobservatory-eu/dataobservatory/branch/master/graph/badge.svg)](https://codecov.io/gh/dataobservatory-eu/dataobservatory?branch=master)
 [![Follow
@@ -19,18 +20,16 @@ author](https://img.shields.io/twitter/follow/antaldaniel.svg?style=social)](htt
 rOpenGov](https://img.shields.io/twitter/follow/ropengov.svg?style=social)](https://twitter.com/intent/follow?screen_name=ropengov)
 <!-- badges: end -->
 
-The goal of dataobservatory is to …
+The goal of dataobservatory is to facilitate the automated
+documentation, and the automated recording of descriptive and
+administrative (statistical processing) metadata for datasets. It also
+helps recording information about the computational environment to
+increase reproducability.
 
 ## Installation
 
-You can install the released version of dataobservatory from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("dataobservatory")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+You can install the development version from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
