@@ -58,7 +58,7 @@ dataset <- function(x,
 
   new_dataset (x = x,
                dataset_code = dataset_code,
-               dataset_title=dataset_title,
+               dataset_title = dataset_title,
                freq = freq,
                unit = unit,
                unit_name = unit_name,
