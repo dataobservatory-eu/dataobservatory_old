@@ -3,14 +3,16 @@
 \docType{data}
 \name{datacite_properties}
 \alias{datacite_properties}
-\title{DataCite Properties}
+\title{DataCite Properties
+
+The properties of the DataCite Metadata Schema in tabular form.}
 \format{
 A data frame with 20 rows and 3 variables:
 \describe{
 \item{ID}{ID (a number).}
 \item{Property}{Description of the DataCite Field.}
-\item(Structure){Additional strucutre information.}
-\item{Oblibation}{M - Mandatory, R - Recommended, O - Optional.}
+\item{Structure}{Additional strucutre information.}
+\item{Obligation}{M - Mandatory, R - Recommended, O - Optional.}
 }
 }
 \source{
@@ -20,6 +22,8 @@ A data frame with 20 rows and 3 variables:
 datacite_properties
 }
 \description{
+DataCite Properties
+
 The properties of the DataCite Metadata Schema in tabular form.
 }
 \details{
