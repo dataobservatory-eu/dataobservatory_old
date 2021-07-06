@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r knitr-options, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -59,7 +59,7 @@ small_population_datacite
 is.datacite(small_population_datacite)
 ```
 
-The `Description` property has two mandatory elements:
+The `Description` property has three mandatory elements:
 
 - The `Abstract` is a short, textual description.
 - In the `TechnicalInfo` sub-field, we record automatically the `utils::sessionInfo()` for computational reproducability.
