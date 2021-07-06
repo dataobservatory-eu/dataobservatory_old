@@ -1,16 +1,16 @@
 #' @title DataCite Properties
 #'
-#' The properties of the DataCite Metadata Schema in tabular form.
+#' @description The properties of the DataCite Metadata Schema in tabular form.
 #'
-#' @details More detailed descriptions of the properties, and their related sub-properties,
-#' are provided in DataCite Schema Mandatory Properties and
-#' DataCite Schema Recommended and Optional Metadata.
-#'
-#' There are three different levels of obligation for the metadata properties:
+#' @details There are three different levels of obligation for the metadata properties: \cr
 #' - Mandatory (M) properties must be provided, \cr
 #' - Recommended (R) properties are optional, but strongly recommended for interoperability \cr
 #' - Optional (O) properties are optional and provide richer description. \cr
 #'
+#' More detailed descriptions of the properties, and their related sub-properties,
+#' are provided in:
+#' - \href{https://support.datacite.org/docs/datacite-metadata-schema-v44-mandatory-properties/}{DataCite Metadata Schema v4.4 Mandatory Properties}; \cr
+#' - \href{https://support.datacite.org/docs/datacite-metadata-schema-v44-mandatory-properties/}{DataCite Metadata Schema v4.4 Recommended and Optional Metadata}.
 #' @format A data frame with 20 rows and 3 variables:
 #' \describe{
 #'   \item{ID}{ID (a number).}

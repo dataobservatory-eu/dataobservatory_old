@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, echo=FALSE, message=TRUE}
+```{r setup, message=FALSE, warning=FALSE}
 library(dataobservatory, quietly = TRUE)
 data("small_population")
 small_population_dataset <- dataset (x= small_population,

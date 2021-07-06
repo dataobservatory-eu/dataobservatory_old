@@ -16,17 +16,23 @@ knitr::opts_chunk$set(
 
 The `datacite` class (see `?datacite()`) is a modification of a data frame (tibble) object, and it creates all the mandatory and recommended fields of the [DataCite](https://support.datacite.org/docs/datacite-metadata-schema-v44-properties-overview) metadata schema for a dataset.  It also covers all the properties in the more general Dublin Core standard, but in some cases, the property name is different (and follows the DataCite naming convention.)  
 
+```{r datacite-properties, message=FALSE, warning=FALSE}
+library(dataobservatory, quietly = TRUE)
+data("datacite_properties")
+datacite_properties
+```
 The `datacite` class is equipped with a construction and helper functions that create the more complex metadata properties as JSON (default) or list objects. Not all the helper functions are fully validated, but a fully datacite object can be easily obtained. 
 
-```{r setup, echo=FALSE, message=TRUE}
-library(dataobservatory, quietly = TRUE)
+```{r setup, message=FALSE, warning=FALSE}
+library(jsonlite, quietly = TRUE)
 data("small_population")
-small_population_dataset <- dataset (x= small_population,
-                                     dataset_code = "small_population_total",
-                                     dataset_title = "Population of Small European Countries",
-                                     freq = "A",
-                                     unit = "NR",
-                                     unit_name = "number")
+small_population_dataset <- dataset (
+  x= small_population,
+  dataset_code = "small_population_total",
+  dataset_title = "Population of Small European Countries",
+  freq = "A",
+  unit = "NR",
+  unit_name = "number")
 
 attributes (small_population_dataset)
 ```
@@ -36,6 +42,8 @@ The `datacite_dataset()` function fills out the `datacite` object with default p
 ```{r}
 small_population_datacite <- datacite_dataset(
   dataset = small_population_dataset,
+  keywords = c("greendeal", "Demography", "Testing"),
+  description = "Example dataset with three small countries",
   Subject = "Demography",
   Creator = "Joe, Doe")
 ```
@@ -51,13 +59,24 @@ small_population_datacite
 is.datacite(small_population_datacite)
 ```
 
+The `Description` property has two mandatory elements:
 
+- The `Abstract` is a short, textual description.
+- In the `TechnicalInfo` sub-field, we record automatically the `utils::sessionInfo()` for computational reproducability.
+- In the `Other` sub-field, we record the keywords for structuring the observatory.
+
+```{r}
+small_population_description <- small_population_datacite$Description
+jsonlite::fromJSON(small_population_description)
+```
 ## Complex Properties
 
 The Creator property may have affiliation data, and ORCiD identifier present, By default, we create a json representation:
 
 ```{r}
-jane <- add_creators("Jane", "Doe", affiliation = "Green Deal Data Observatory")
+jane <- add_creators("Jane", "Doe", 
+                     affiliation = "Green Deal Data Observatory", 
+                     orcid = "0000-0000-0000-0000")
 jane
 ```
 

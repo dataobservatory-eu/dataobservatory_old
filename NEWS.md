@@ -1,3 +1,7 @@
+# dataobservatory 0.1.1
+* `add_freq_value` and ``
+* Datasets: `small_population_data` and `datacite_properties`
+
 # dataobservatory 0.1.0
 
 * The goal of dataobservatory is to facilitate 
