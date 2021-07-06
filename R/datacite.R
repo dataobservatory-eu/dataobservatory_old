@@ -120,11 +120,15 @@ datacite <- function (
 #' @rdname datacite
 #' @param dataset A dataset object. Its Size, Geolocation and Date properties
 #' will be added to the metadata object.
+#' @param description A basic description for the Abstract property of the
+#' description.
 #' @inheritParams datacite
 #' @export
 
 datacite_dataset <- function(dataset,
                              dataset_code = NULL,
+                             description = NULL,
+                             keywords = NULL,
                              Title = NULL,
                              Subject = NULL,
                              Creator,
@@ -152,11 +156,31 @@ datacite_dataset <- function(dataset,
     )
     }
 
+  if ( is.null(description)) {
+    Abstract = "Title" } else {
+      Abstract = description
+    }
+
   dates_to_add <- add_dates (
     Date = Sys.Date(),
     EarliestObservation = attr(dataset, "earliest_actual_observation"),
     LatestObservation =   attr(dataset, "latest_actual_observation")
     )
+
+
+  if (!is.null(keywords)) {
+    Description <- add_description(
+      Abstract = Abstract,
+      Other = create_json_text(
+        list (  id = paste0("keyword", 1:length(keywords)),
+                name = keywords )
+      )
+    )
+  } else {
+    Description <- add_description(
+      Abstract = Abstract
+    )
+  }
 
   datacite (
     dataset_code = dataset_code,
@@ -165,9 +189,7 @@ datacite_dataset <- function(dataset,
     Creator = Creator,
     Contributor = NA_character_,
     Date = dates_to_add,
-    Description = add_description(
-      Abstract = Title
-    ),
+    Description = Description,
     Size = add_size(dataset),
     GeoLocation = add_geolocation(dataset)
   )
