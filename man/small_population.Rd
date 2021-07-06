@@ -9,7 +9,7 @@ A data frame with 60 rows and 5 variables:
 \describe{
 \item{unit}{NR, natural count}
 \item{sex}{F for female, M for male, and T for total population.}
-\item{geo}{Geographical observation area, countries}
+\item{geo}{Geographical reference area for the observations, countries}
 \item{time}{time of observation}
 \item{values}{number of people}
 }

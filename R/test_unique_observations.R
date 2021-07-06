@@ -26,6 +26,20 @@ is_unique_observations <- function( dataset ) {
     msg = "The dataset must have geo, time, value, obs_status variable columns."
   )
 
+  if ( "unit" %in% names (dataset) ) {
+    assertthat::assert_that(
+      length(unique(dataset$unit)) < 2,
+      msg = "The dataset must have a unique unit."
+    )
+  }
+
+  if ( "unit_name" %in% names (dataset) ) {
+    assertthat::assert_that(
+      length(unique(dataset$unit_name)) < 2,
+      msg = "The dataset must have a unique unit_name."
+    )
+  }
+
   uniqueness <- dataset %>%
     dplyr::select ( all_of(c("geo", "time", "value", "obs_status")) ) %>%
     dplyr::group_by ( .data$geo, .data$time, .data$value ) %>%

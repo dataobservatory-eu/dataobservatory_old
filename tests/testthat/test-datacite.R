@@ -8,14 +8,10 @@ small_population_dataset <- dataset (x= small_population,
                                      unit_name = "number")
 add_contributors("Joe", "Doe", "DataCurator", "Green Deal Data Observatory")
 
-datacite_dataset (
-  dataset = small_population_dataset,
-  dataset_code = "small_population_total",
-  Title = "Population on 1 January by age and sex",
-  Subject = "Demography",
-  Creator = add_creators("Jane", "Doe", "Reprex"))
 
+data("datacite_properties")
 
+mandatory_properties <- datacite_properties$Property [ datacite_properties$Obligation == "M"]
 
 small_pop_datacite <- datacite (
   dataset_code = "small_population_total",
@@ -23,34 +19,30 @@ small_pop_datacite <- datacite (
   Subject = "demography",
   Creator = add_creators("Jane", "Doe", "Reprex"),
   Contributor = add_contributors("Joe", "Doe",
-                                "DataCurator", "Green Deal Data Observatory",
-                                format = 'json')
+                                 "DataCurator", "Green Deal Data Observatory",
+                                 format = 'json')
 )
 
+subsetted <- subset ( small_pop_datacite, select = mandatory_properties)
+
+
 small_pop_datacite_2 <- datacite_dataset (small_population_dataset,
-                 dataset_code = "small_population_total",
-                 Title = "Population on 1 January by age and sex",
-                 Subject = "demography",
-                 Creator = add_creators("Jane", "Doe", "Reprex"),
+                                          dataset_code = "small_population_total",
+                                          Title = "Population on 1 January by age and sex",
+                                          Subject = "demography",
+                                          Creator = add_creators("Jane", "Doe", "Reprex"),
 
-                 Contributor = add_contributors("Joe", "Doe",
-                                               "DataCurator", "Green Deal Data Observatory",
-                                               format = 'json')
-                 )
+                                          Contributor = add_contributors("Joe", "Doe",
+                                                                         "DataCurator", "Green Deal Data Observatory",
+                                                                         format = 'json')
+)
 
-
-
-datacite_names <- c('dataset_code', 'Identifier', 'Creator', 'Title', 'Publisher',
-                    'PublicationYear', 'ResourceType', 'Subject', 'Contributor',
-                    'Date', 'Language', 'RelatedIdentifier', 'Size', 'Format',
-                    'Version', 'Rights', 'Description',
-                    'GeoLocation', 'FundingReference', 'RelatedItem')
 
 test_that("datacite work", {
-  expect_equal(names(small_pop_datacite), datacite_names)
+  expect_equal(names(small_pop_datacite), c("dataset_code", datacite_properties$Property))
   expect_equal(small_pop_datacite$Title, "Population on 1 January by age and sex")
+  expect_equal(sum(unlist(lapply(subsetted, is.na))), 0)
 })
-
 
 test_date_string <- paste0('{\"Updated\":[\"',
                            as.character(Sys.Date()),
