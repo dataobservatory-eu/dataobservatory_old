@@ -178,6 +178,65 @@ validate_name <- function (givenName,
          nameType = nameType)
 }
 
+#' @title Add description
+#'
+#' @description All additional information that does not
+#' fit in any of the other categories. May be used for technical information.
+#'
+#' @details
+#' See \href{https://support.datacite.org/docs/schema-optional-properties-v41#17-description}{DataCite Metadata Schema v4.4 Recommended and Optional Properties 14 Description}
+#'
+#' @param Abstract
+#' A brief description of the resource and the context in which the resource was created.
+#' Recommended for discovery.\cr
+#' Use \code{<br>} to indicate a line break for improved rendering of multiple paragraphs,
+#' but otherwise no html markup.
+#' @param Methods The methodology employed for the study or research.
+#' Recommended for discovery.
+#' @param SeriesInformation Information about a repeating series, such as volume,
+#' issue, number.
+#' @param TableofContents A listing of the Table of Contents.
+#' Use  \code{<br>} to indicate a line break for improved rendering of multiple paragraphs,
+#' but otherwise no html markup.
+#' @param TechnicalInfo Detailed information that may be associated with design,
+#' implementation, operation, use, and/or maintenance of a process or system.
+#' Defaults to adding \code{\link{add_sessioninfo}}.
+#' @param Other Other description information that does not fit into an existing category.
+#' @return
+#' @examples
+#' add_description ("My Description")
+#' @export
+
+add_description <- function (
+  Abstract,
+  Methods = NULL,
+  SeriesInformation = NULL,
+  TableOfContents = NULL,
+  TechnicalInfo = NULL,
+  Other = NULL,
+  format = "json") {
+
+  Abstract <- as.character(Abstract)
+  assertthat::assert_that( length(Abstract)==1,
+                           msg = "The Absract property must be a single character string.")
+
+  assertthat::assert_that( (is.null(Other)) | (length(Other)==1),
+                           msg = "The Other property must be a single character string.")
+
+  Description = list ( Abstract = Abstract )
+  if(!is.null(Methods)) Description$Methods <- Methods
+  if(!is.null(SeriesInformation)) Description$SeriesInformation <- SeriesInformation
+  if(!is.null(TableOfContents)) Description$TableOfContents<-TableOfContents
+  if(is.null(TechnicalInfo)) Description$TechnicalInfo <- add_sessioninfo()
+  if(!is.null(Other)) Description$Other <- Other
+
+  if ( format == "json") {
+    create_json_text(Description)
+  } else {
+    Description
+  }
+}
+
 #' @title Add identifiders
 #'
 #' @description Add a unique string that identifies a resource.
