@@ -122,7 +122,28 @@ datacite <- function (
 #' will be added to the metadata object.
 #' @param description A basic description for the Abstract property of the
 #' description.
+#' @param keywords In the \code{Other} sub-field of the \code{Description} metadata property,
+#' we record keywords for structuring our observatory.
 #' @inheritParams datacite
+#' @examples
+#' data("small_population")
+#' small_population_dataset <- dataset (
+#'   x = small_population,
+#'   dataset_code = "small_population_total",
+#'   dataset_title = "Population of Small European Countries",
+#'   freq = "A",
+#'   unit = "NR",
+#'   unit_name = "number")
+#'
+#' #The final DataCite properties are Capitalized:
+#'
+#' small_population_datacite <- datacite_dataset(
+#'   dataset = small_population_dataset,
+#'   keywords = c("greendeal", "Demography", "Testing"),
+#'   description = "Example dataset with three small countries",
+#'   Subject = "Demography",
+#'   Creator = "Joe, Doe"
+#'   )
 #' @export
 
 datacite_dataset <- function(dataset,
@@ -219,7 +240,7 @@ datacite_new    <- function (
   Description = NA_character_,         # DataCite recommended
   GeoLocation = NA_character_,         # DataCite recommended + Dublin Core coverage
   FundingReference = NA_character_ ,   # DataCite optional
-  RelatedItem = NA_character_          #DataCite optional + Dublin Core
+  RelatedItem = NA_character_          # DataCite optional + Dublin Core
 ) {
 
   ## Setting Default Options -----------------
