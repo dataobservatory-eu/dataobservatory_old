@@ -16,6 +16,7 @@ datacite_new(
   Contributor = NA_character_,
   Date = add_dates(),
   Language = "eng",
+  AlternateIdentifier = NA_character_,
   RelatedIdentifier = NA_character_,
   Size = NA_character_,
   Format = NA_character_,
@@ -51,7 +52,10 @@ ID, given by an observatory curator.}
 
 \item{Language}{Defaults to \code{'eng'}.}
 
-\item{RelatedIdentifier}{Defaults to NA_character_}
+\item{AlternateIdentifier}{Defaults to NA_character_. It should have type subproperty.}
+
+\item{RelatedIdentifier}{Defaults to NA_character_.
+Related identifier should have type and relation type sub-properties.}
 
 \item{Size}{The size of the dataset, as measured in CSV format in bytes.}
 

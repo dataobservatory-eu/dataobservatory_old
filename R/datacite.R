@@ -34,7 +34,9 @@
 #' @param Contributor The Contributor field created by \code{\link{add_contributors}}.
 #' @param Date The Date filed created by \code{\link{add_dates}}.
 #' @param Language Defaults to \code{'eng'}.
-#' @param RelatedIdentifier Defaults to NA_character_
+#' @param AlternateIdentifier Defaults to NA_character_. It should have type subproperty.
+#' @param RelatedIdentifier Defaults to NA_character_.
+#' Related identifier should have type and relation type sub-properties.
 #' @param Size The size of the dataset, as measured in CSV format in bytes.
 #' @param Format The format(s) of the dataset.
 #' @param Version The version of the dataset.
@@ -43,6 +45,7 @@
 #' @param Geolocation The geographical dimension of the observation in the dataset,
 #' created by \code{\link{add_geolocation}}.
 #' @return A data frame of DataCite properties are variable columns.
+#' @seealso datacite_properties
 #' @examples
 #' data("small_population")
 #'
@@ -75,6 +78,7 @@ datacite <- function (
   Contributor = NA_character_,        # DataCite recommended
   Date = as.character(Sys.Date()),    # DataCite recommended
   Language = "eng",                   # DataCite optional + Dublin Core
+  AlternateIdentifier = NA_character_,# DataCite optional
   RelatedIdentifier  = NA_character_, # DataCite recommended
   Size = NA_character_,               # DataCite optional
   Format = NA_character_,             # DataCite optional + Dublin Core
@@ -83,7 +87,7 @@ datacite <- function (
   Description = NA_character_,        # DataCite recommended
   GeoLocation = NA_character_,        # DataCite recommended + Dublin Core coverage
   FundingReference = NA_character_ ,  # DataCite optional
-  RelatedItem = NA_character_         #DataCite optional + Dublin Core
+  RelatedItem = NA_character_         # DataCite optional + Dublin Core
 ) {
 
   datacite <- datacite_new(
@@ -97,9 +101,10 @@ datacite <- function (
     Subject = Subject,                     # DataCite recommended + Dublin Core
     Contributor = Contributor,             # DataCite recommended
     Date = Date,                           # DataCite recommended
-    Language = Language,                   # DataCite optional + Dublin Core
-    RelatedIdentifier = RelatedIdentifier, # DataCite recommended
-    Size = Size,                           # DataCite optional
+    Language = Language,                         # DataCite optional + Dublin Core
+    AlternateIdentifier = 	AlternateIdentifier, # DataCite optional
+    RelatedIdentifier = RelatedIdentifier,       # DataCite recommended
+    Size = Size,                                 # DataCite optional
     Format = Format,                       # DataCite optional + Dublin Core
     Version = Version,                     # DataCite optional
     Rights = Rights,                       # DataCite optional + Dublin Core
@@ -160,6 +165,9 @@ datacite_dataset <- function(dataset,
     Creator = Creator,
     Contributor = NA_character_,
     Date = dates_to_add,
+    Description = add_description(
+      Abstract = Title
+    ),
     Size = add_size(dataset),
     GeoLocation = add_geolocation(dataset)
   )
@@ -170,25 +178,26 @@ datacite_dataset <- function(dataset,
 #' @keywords internal
 datacite_new    <- function (
   dataset_code,
-  Identifier = NA_character_,         # DataCite mandatory
-  Creator,                            # DataCite mandatory
-  Title,                              # DataCite mandatory
-  Publisher = NA_character_,          # DataCite mandatory
-  PublicationYear = NA_real_,         # DataCite mandatory
-  ResourceType = "Dataset",           # DataCite mandatory
-  Subject,                            # DataCite recommended + Dublin Core
-  Contributor = NA_character_,        # DataCite recommended
-  Date = add_dates(),                 # DataCite recommended
-  Language = "eng",                   # DataCite optional + Dublin Core
-  RelatedIdentifier  = NA_character_, # DataCite recommended
-  Size = NA_character_,               # DataCite optional
-  Format = NA_character_,             # DataCite optional + Dublin Core
-  Version = NA_character_,            # DataCite optional
-  Rights = add_rights(),              # DataCite optional + Dublin Core
-  Description = NA_character_,        # DataCite recommended
-  GeoLocation = NA_character_,        # DataCite recommended + Dublin Core coverage
-  FundingReference = NA_character_ ,  # DataCite optional
-  RelatedItem = NA_character_         #DataCite optional + Dublin Core
+  Identifier = NA_character_,          # DataCite mandatory
+  Creator,                             # DataCite mandatory
+  Title,                               # DataCite mandatory
+  Publisher = NA_character_,           # DataCite mandatory
+  PublicationYear = NA_real_,          # DataCite mandatory
+  ResourceType = "Dataset",            # DataCite mandatory
+  Subject,                             # DataCite recommended + Dublin Core
+  Contributor = NA_character_,         # DataCite recommended
+  Date = add_dates(),                  # DataCite recommended
+  Language = "eng",                    # DataCite optional + Dublin Core
+  AlternateIdentifier = NA_character_, # DataCite Optional
+  RelatedIdentifier  = NA_character_,  # DataCite recommended
+  Size = NA_character_,                # DataCite optional
+  Format = NA_character_,              # DataCite optional + Dublin Core
+  Version = NA_character_,             # DataCite optional
+  Rights = add_rights(),               # DataCite optional + Dublin Core
+  Description = NA_character_,         # DataCite recommended
+  GeoLocation = NA_character_,         # DataCite recommended + Dublin Core coverage
+  FundingReference = NA_character_ ,   # DataCite optional
+  RelatedItem = NA_character_          #DataCite optional + Dublin Core
 ) {
 
   ## Setting Default Options -----------------
@@ -216,6 +225,7 @@ datacite_new    <- function (
     Contributor = Contributor,             # DataCite recommended
     Date = Date,                           # DataCite recommended
     Language = Language,                   # DataCite optional + Dublin Core
+    AlternateIdentifier = AlternateIdentifier, # DataCite Optional
     RelatedIdentifier = RelatedIdentifier, # DataCite recommended
     Size = Size,                           # DataCite optional
     Format = Format,                       # DataCite optional + Dublin Core
@@ -239,6 +249,7 @@ datacite_new    <- function (
     Contributor = Contributor,             # DataCite recommended
     Date = Date,                           # DataCite recommended
     Language = Language,                   # DataCite optional + Dublin Core
+    AlternateIdentifier = AlternateIdentifier, # DataCite Optional
     RelatedIdentifier = RelatedIdentifier, # DataCite recommended
     Size = Size,                           # DataCite optional
     Format = Format,                       # DataCite optional + Dublin Core
@@ -309,6 +320,7 @@ validate_datacite <- function(
   Contributor,       # DataCite recommended
   Date,              # DataCite recommended
   Language,          # DataCite optional + Dublin Core
+  AlternateIdentifier, #DataCite otional
   RelatedIdentifier, # DataCite recommended
   Size,              # DataCite optional
   Format,            # DataCite optional + Dublin Core
