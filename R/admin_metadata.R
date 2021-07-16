@@ -228,7 +228,7 @@ cl_unit_not_validated <- function(id, name,
     id, name, description, RelatedItem)
 }
 
-
+#' @keywords internal
 resource_types_datacite <- function() {
   resource_types <- c('Audiovisual',
                   'Book',

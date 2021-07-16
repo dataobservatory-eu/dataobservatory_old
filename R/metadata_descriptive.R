@@ -302,14 +302,6 @@ add_identifiers <- function (
     msg = "All identifiers are NULL. At least one of them must be given."
   )
 
-
-  RelatedItem <- list (
-    RelatedItem = RelatedItem,
-    relatedItemType = relatedItemType,
-    relationType = relationType,
-    relatedItemIdentifier = relatedItemIdentifier
-  )
-
   if ( !is.null(identifiers) ) {
     if (all(vapply(identifiers, is.json, logical(1)))) {
       assertthat::assert_that(
