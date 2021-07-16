@@ -6,10 +6,9 @@ small_population_dataset <- dataset (x= small_population,
                                      freq = "A",
                                      unit = "NR",
                                      unit_name = "number")
-add_contributors("Joe", "Doe", "DataCurator", "Green Deal Data Observatory")
 
 
-data("datacite_properties")
+
 
 mandatory_properties <- datacite_properties$Property [ datacite_properties$Obligation == "M"]
 
@@ -22,6 +21,13 @@ small_pop_datacite <- datacite (
                                  "DataCurator", "Green Deal Data Observatory",
                                  format = 'json')
 )
+
+test_that("valid json is returned", {
+  expect_true(is.json(add_contributors("Joe", "Doe", "DataCurator", "Green Deal Data Observatory")))
+  expect_true(is.json(small_pop_datacite$Contributor))
+})
+
+
 
 subsetted <- subset ( small_pop_datacite, select = mandatory_properties)
 

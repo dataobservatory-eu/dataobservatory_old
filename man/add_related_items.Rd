@@ -34,3 +34,20 @@ In Dublin Core, Relation:
 DataCite Metadata Schema Optional Properties, relatedItem:
 \href{https://support.datacite.org/docs/datacite-metadata-schema-v44-recommended-and-optional-properties}{DataCite Metadata Schema v4.4 Recommended and Optional Properties}
 }
+\examples{
+first_rel_item <- add_related_items (
+     RelatedItem = "First Related Item",
+     relatedItemType = "Dataset",
+     relationType = "IsDerivedFrom",
+     relatedItemIdentifier = add_identifiers (id = "first_rel_item"),
+     related_items = NULL,
+  format = 'json' )
+
+add_related_items (
+    RelatedItem = "Second Related Item",
+    relatedItemType = "Dataset",
+    relationType = "IsDerivedFrom",
+    relatedItemIdentifier = add_identifiers (id = "second_rel_item"),
+    related_items = first_rel_item,
+    format = 'json' )
+}

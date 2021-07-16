@@ -202,6 +202,7 @@ validate_name <- function (givenName,
 #' implementation, operation, use, and/or maintenance of a process or system.
 #' Defaults to adding \code{\link{add_sessioninfo}}.
 #' @param Other Other description information that does not fit into an existing category.
+#' @importFrom jsonlite toJSON
 #' @return
 #' @examples
 #' add_description ("My Description")
@@ -231,7 +232,7 @@ add_description <- function (
   if(!is.null(Other)) Description$Other <- Other
 
   if ( format == "json") {
-    create_json_text(Description)
+    jsonlite::toJSON(Description)
   } else {
     Description
   }
@@ -302,20 +303,30 @@ add_identifiers <- function (
   )
 
 
+  RelatedItem <- list (
+    RelatedItem = RelatedItem,
+    relatedItemType = relatedItemType,
+    relationType = relationType,
+    relatedItemIdentifier = relatedItemIdentifier
+  )
+
   if ( !is.null(identifiers) ) {
     if (all(vapply(identifiers, is.json, logical(1)))) {
       assertthat::assert_that(
-        all(vapply(identifiers, validate_identifier, logical(1))),
+        all(vapply(identifiers, validate_related_item, logical(1))),
         msg = "Every related item must be strictly formatted."
       )
-      c(create_json_text(Identifiers), identifiers)
-    } else {
-      append(identifiers, list(Identifiers))
+
+      if ( is.json(identifiers) ) {
+        identifiers <- jsonlite::fromJSON(identifiers)
+      }
     }
-  } else if ( format == "list" ) {
-    list(Identifiers)
-  } else if ( format=="json") {
-    create_json_text(Identifiers)
+  }
+
+  if ( format == "list") {
+    append ( list(identifiers), list(Identifiers) )
+  }  else if ( format=="json") {
+    jsonlite::toJSON(append ( list(identifiers), list(Identifiers) ))
   } else{
     stop("The parameter='format' must be either 'list' or 'json'")
   }
@@ -372,6 +383,23 @@ validate_identifier <- function (Identifier) {
 #'
 #' @param relatedItemIdentifer An Identifier created by
 #'  \code{\link{add_identifiers}}.
+#' @importFrom jsonlite toJSON
+#' @examples
+#' first_rel_item <- add_related_items (
+#'      RelatedItem = "First Related Item",
+#'      relatedItemType = "Dataset",
+#'      relationType = "IsDerivedFrom",
+#'      relatedItemIdentifier = add_identifiers (id = "first_rel_item"),
+#'      related_items = NULL,
+#'   format = 'json' )
+#'
+#' add_related_items (
+#'     RelatedItem = "Second Related Item",
+#'     relatedItemType = "Dataset",
+#'     relationType = "IsDerivedFrom",
+#'     relatedItemIdentifier = add_identifiers (id = "second_rel_item"),
+#'     related_items = first_rel_item,
+#'     format = 'json' )
 #' @export
 add_related_items <- function (
   RelatedItem,
@@ -385,8 +413,6 @@ add_related_items <- function (
   relation_types <- relation_type_datacite()
   validate_identifier(Identifier  = relatedItemIdentifier)
 
-  #relation_types_document <- paste0("\\code{", relation_types, "}")
-  #paste (relation_types_document, collapse = ", " )
 
   not_one_of_relations <- paste (relation_types, collapse = ", ")
 
@@ -407,21 +433,23 @@ add_related_items <- function (
     relatedItemIdentifier = relatedItemIdentifier
   )
 
-
   if ( !is.null(related_items) ) {
     if (all(vapply(related_items, is.json, logical(1)))) {
       assertthat::assert_that(
         all(vapply(related_items, validate_related_item, logical(1))),
         msg = "Every related item must be strictly formatted."
       )
-      c(create_json_text(RelatedItem), related_items)
-    } else {
-      append(related_items, list(RelatedItem))
+
+      if ( is.json(related_items) ) {
+        related_items <- jsonlite::fromJSON(related_items)
+      }
     }
-  } else if ( format == "list" ) {
-    list(RelatedItem)
-  } else if ( format=="json") {
-    create_json_text(RelatedItem)
+  }
+
+  if ( format == "list") {
+    append ( list(related_items), list(RelatedItem) )
+  }  else if ( format=="json") {
+    jsonlite::toJSON(append ( list(related_items), list(RelatedItem) ))
   } else{
     stop("The parameter='format' must be either 'list' or 'json'")
   }
@@ -511,7 +539,7 @@ add_titles <- function (Title = NULL,
   if ( !is.null(Other)) titles$Other <- Other
 
   if (format=="json") {
-    create_json_text(titles)
+    jsonlite::toJSON(titles)
   } else {
     titles
   }
@@ -604,7 +632,7 @@ add_dates <- function ( Date = Sys.Date(),
   if (!is.null(Withdrawn)) dates$Withdrawn <- Withdrawn
 
   if (format=="json") {
-    create_json_text(dates)
+    jsonlite::toJSON(dates)
   } else if (format=="list") {
     dates
   } else {
@@ -666,7 +694,7 @@ add_rights <- function ( rightsIdentifier = 'CC-BY-NC-SA-4.0',
   if ( format == "list") {
     Rigths
   } else {
-    create_json_text(Rigths)
+    jsonlite::toJSON(Rigths)
   }
 }
 
@@ -732,6 +760,6 @@ add_geolocation <- function(dat,
   if ( format == "list") {
     GeoLocation
   } else {
-    create_json_text(GeoLocation)
+    jsonlite::toJSON(GeoLocation)
   }
 }

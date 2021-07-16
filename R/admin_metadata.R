@@ -9,6 +9,7 @@
 #' \code{'data.frame'}.
 #' @param name Name of the administrative metadata.
 #' @param description Description of the administrative metadata.
+#' @importFrom jsonlite toJSON
 #' @return An id, a list, a data.frame or a json formatted administrative metadata record.
 
 add_admin_metadata <- function(id,
@@ -43,7 +44,7 @@ add_admin_metadata <- function(id,
 
   if ( admin_format == 'id') {
     return (id) } else if ( admin_format == "json") {
-      apply ( codelist, 1, create_json_text )
+      apply ( codelist, 1, jsonlite::toJSON  )
     }  else if ( admin_format == 'list') {
       if (length(id)==1) {
         as.list(codelist)
@@ -106,14 +107,16 @@ add_obs <- function(id, admin_format = 'id') {
 #'
 #' @description Converts \code{\link{[utils](sessionInfo)}} into a JSON text.
 #' @importFrom utils sessionInfo
+#' @importFrom jsonlite toJSON
 #' @return A JSON text.
 #' @export
 add_sessioninfo <- function() {
   si <- sessionInfo()
-  create_json_text ( si [vapply (si, is.character, logical(1))])
+  jsonlite::toJSON ( si [vapply (si, is.character, logical(1))])
 }
 
 #' @importFrom tibble tribble
+#' @importFrom jsonlite toJSON
 #' @keywords interna
 cl_freq <- function(...) {
 
@@ -161,7 +164,7 @@ cl_freq <- function(...) {
     relatedItemIdentifier =  add_identifiers(
       id = "iso8106",
       URI  = "https://www.iso.org/iso-8601-date-and-time-format.html",
-      Other = create_json_text ( list ( id = cl_freq$id,
+      Other = jsonlite::toJSON  ( list ( id = cl_freq$id,
                                         name = cl_freq$name,
                                         iso8106 = cl_freq$iso8106 ))
     )
