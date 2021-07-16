@@ -1,11 +1,19 @@
-#' Find frequency of the data
+#' @title Add frequency column
 #'
+#' @description Add a column for \code{"A"} annual,  \code{"S"}
+#' semiannual,  \code{"Q"} quarterly,  \code{"M"} daily or
+#'  \code{"D"} daily data.
 #' @param dat A data frame with a time variable.
 #' @importFrom lubridate day month year
 #' @importFrom dplyr mutate select all_of
-#' @return A tibble with fixed form.
-#' @keywords internal
-#'
+#' @return A tibble a \code{freq} column added.
+#' @examples
+#' add_freq_value( data.frame (
+#'                    time = as.Date(paste0(c(2019,2019,2020, 2020), "-01-01")),
+#'                    geo  = c("BE", "BE", "NL", "NL"),
+#'                    value = c(10,11,12,10))
+#' )
+#' @export
 
 add_freq_value <- function ( dat ) {
 
@@ -25,3 +33,7 @@ add_freq_value <- function ( dat ) {
     ))   %>%
     select ( -all_of(c("year", "month", "day")))
 }
+
+
+
+

@@ -263,7 +263,7 @@ resource_types_datacite <- function() {
   resource_types
 }
 
-
+#' @keywords internal
 relation_type_datacite <- function() {
 
   c("isCitedBy", "Cites",
@@ -283,6 +283,8 @@ relation_type_datacite <- function() {
     "Reviews", "IsReviewedBy")
 }
 
+#' @importFrom jsonlite toJSON
+#' @keywords internal
 cl_method <-function () {
 
   zoo_citation <- citation("zoo")[[1]]
@@ -304,10 +306,12 @@ cl_method <-function () {
       URI = forecast_citation$url
     ))
 
+
+
  cl_method <-  tibble::tribble(
     ~id, ~name, ~description, ~RelatedItem,
-    "A", "Actual values", "No method applied.", "",
-    "O", "Missing values", "No method applied.", "",
+    "A", "Actual values", "No method applied.", jsonlite::toJSON(""),
+    "O", "Missing values", "No method applied.", jsonlite::toJSON(""),
     "locf", "Last Observation Carry Forward", "Replacing each missing item with the most recent non-missing prior to it.", zoo_related_item,
     "nocb", "Next Observation Carry Backwards", "Replacing each missing item with the next non-missing prior after it.", zoo_related_item,
     "approx", "Linear Approximation", "Replacing each missing item with interpolated values.", zoo_related_item,

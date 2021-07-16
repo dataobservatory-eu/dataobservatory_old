@@ -2,7 +2,7 @@
 % Please edit documentation in R/add_freq_value.R
 \name{add_freq_value}
 \alias{add_freq_value}
-\title{Find frequency of the data}
+\title{Add frequency column}
 \usage{
 add_freq_value(dat)
 }
@@ -10,9 +10,17 @@ add_freq_value(dat)
 \item{dat}{A data frame with a time variable.}
 }
 \value{
-A tibble with fixed form.
+A tibble a \code{freq} column added.
 }
 \description{
-Find frequency of the data
+Add a column for \code{"A"} annual,  \code{"S"}
+semiannual,  \code{"Q"} quarterly,  \code{"M"} daily or
+\code{"D"} daily data.
 }
-\keyword{internal}
+\examples{
+add_freq_value( data.frame (
+                   time = as.Date(paste0(c(2019,2019,2020, 2020), "-01-01")),
+                   geo  = c("BE", "BE", "NL", "NL"),
+                   value = c(10,11,12,10))
+)
+}
