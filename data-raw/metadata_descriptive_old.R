@@ -302,10 +302,7 @@ add_identifiers <- function (
     msg = "All identifiers are NULL. At least one of them must be given."
   )
 
-  Identifiers <- Identifiers [!vapply ( Identifiers, is.null, logical(1))]
-
   if ( !is.null(identifiers) ) {
-    # There are earlier identifiders to add to a list
     if (all(vapply(identifiers, is.json, logical(1)))) {
       assertthat::assert_that(
         all(vapply(identifiers, validate_related_item, logical(1))),
@@ -313,19 +310,16 @@ add_identifiers <- function (
       )
 
       if ( is.json(identifiers) ) {
-        identifiers <-jsonlite::fromJSON(identifiers)
-
-        if ( format == "list") append ( list (identifiers), list(Identifiers)) else {
-
-           jsonlite::toJSON( append ( list (identifiers), list(Identifiers)) )
-        }
+        identifiers <- jsonlite::fromJSON(identifiers)
       }
     }
-  } else if ( format == "list") {
-    Identifiers
-  } else if ( format == "json") {
-    stringr::str_sub(jsonlite::toJSON ( as_tibble(Identifiers) ), 2,-2)
-    } else {
+  }
+
+  if ( format == "list") {
+    append ( list(identifiers), list(Identifiers) )
+  }  else if ( format=="json") {
+    jsonlite::toJSON(append ( list(identifiers), list(Identifiers) ))
+  } else{
     stop("The parameter='format' must be either 'list' or 'json'")
   }
 }
@@ -431,8 +425,6 @@ add_related_items <- function (
     relatedItemIdentifier = relatedItemIdentifier
   )
 
-  RelatedItem <- RelatedItem [ ! vapply ( RelatedItem, is.null, logical(1))]
-
   if ( !is.null(related_items) ) {
     if (all(vapply(related_items, is.json, logical(1)))) {
       assertthat::assert_that(
@@ -443,17 +435,13 @@ add_related_items <- function (
       if ( is.json(related_items) ) {
         related_items <- jsonlite::fromJSON(related_items)
       }
-
-      if ( format == "list") {
-        append(list(related_items), list(RelatedItem))
-      } else {
-        jsonlite::toJSON(append(list(related_items), list(RelatedItem)))
-      }
     }
-  } else if ( format == "list") {
-    RelatedItem
+  }
+
+  if ( format == "list") {
+    append ( list(related_items), list(RelatedItem) )
   }  else if ( format=="json") {
-    jsonlite::toJSON(RelatedItem)
+    jsonlite::toJSON(append ( list(related_items), list(RelatedItem) ))
   } else{
     stop("The parameter='format' must be either 'list' or 'json'")
   }
@@ -767,13 +755,3 @@ add_geolocation <- function(dat,
     jsonlite::toJSON(GeoLocation)
   }
 }
-
-
-#' @Title Valid related identifiers
-#' @keywords internal
-related_identifiers_datacite <- function() {
-  c("ARK", "arXiv", "bibcode", "DOI", "EAN13", "EISSN", "Handle",
-    "IGSN", "ISBN", "ISSN", "ISTC", "LISSN", "LSID", "PMID", "PURC", "UPC",
-    "URL", "URN", "w3id")
-}
-
