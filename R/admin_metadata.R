@@ -158,30 +158,19 @@ cl_freq <- function(...) {
     '_Z','Not applicable','To be used when the qualitative or quantitative values that a variable takes in a data set is not associated to multiple occurrences (only single occurrence exists) one can use the _Z as frequency', ''
   )
 
-  related_identifiders <-   add_related_items(
+
+  related_iso_identifier <-   tibble(
     RelatedItem = "ISO 8601 date and time format (correspondence table)",
     relationType = "Cites",
-    relatedItemIdentifier =  add_identifiers(
-      id = "iso8106",
-      URI  = "https://www.iso.org/iso-8601-date-and-time-format.html",
-      Other = jsonlite::toJSON  ( list ( id = cl_freq$id,
-                                        name = cl_freq$name,
-                                        iso8106 = cl_freq$iso8106 ))
+    relatedItemIdentifier = "https://www.iso.org/iso-8601-date-and-time-format.html",
+    relatedItemIdentifierType = "URL") %>%
+    bind_rows (
+      tibble(RelatedItem = "SDMX Code List for Frequency",
+                relationType = "IsDocumentedBy",
+                relatedItemIdentifierType = "URL",
+                relatedItemIdentifier = "https://sdmx.org/?page_id=3215/" )
     )
-  )
-
-
-
-
-  related_codebook <- add_related_items(RelatedItem = "SDMX Code List for Frequency",
-                                        relationType = "IsDocumentedBy",
-                                        relatedItemIdentifier = add_identifiers(
-                                          id = " CL_FREQ",
-                                          Version = "2.1",
-                                          URI = "https://sdmx.org/?page_id=3215/"
-                                        ))
-
-  cl_freq$RelatedItem <-  related_codebook
+  cl_freq$RelatedItem <-  as.character(jsonlite::toJSON(related_iso_identifier))
 
   cl_freq
 }
@@ -205,13 +194,11 @@ cl_obs_status <- function(...) {
     'P',	'Provisional value',	'An observation is characterised as provisional when the source agency – while it bases its calculations on its standard production methodology – considers that the data, almost certainly, are expected to be revised.',
   )
 
-  related_codebook <- add_related_items(RelatedItem = "SDMX Code List for Observation Status",
+  related_codebook <- tibble(RelatedItem = "SDMX Code List for Observation Status",
                     relationType = "IsDocumentedBy",
-                    relatedItemIdentifier = add_identifiers(
-                      id = " CL_OBS_STATUS",
-                      Version = "2.2",
-                      URI = "https://sdmx.org/?sdmx_news=new-version-of-code-list-for-observation-status-version-2-2/"
-                    ))
+                    relatedItemIdentifier = "https://sdmx.org/?sdmx_news=new-version-of-code-list-for-observation-status-version-2-2/",
+                    relatedItemIdentifierType = "URL") %>% jsonlite::toJSON() %>% as.character()
+
   obs_status$RelatedItem <- related_codebook
 
   obs_status
@@ -291,32 +278,50 @@ cl_method <-function () {
   forecast_citation <- citation("forecast")[[1]]
 
 
-  zoo_related_item <- add_related_items(
+  zoo_related_item <- tibble(
     RelatedItem = zoo_citation$title,
     relationType = "isCompiledBy",
-    relatedItemIdentifier =add_identifiers(
-      DOI = zoo_citation$doi
-    ))
+    relatedItemIdentifierType = "DOI",
+    relatedItemIdentifier = zoo_citation$doi) %>% jsonlite::toJSON() %>% as.character()
 
-  forecast_related_item <- add_related_items(
+  forecast_related_item <- tibble(
     RelatedItem = forecast_citation$title,
     relationType = "isCompiledBy",
-    relatedItemIdentifier =add_identifiers(
-      DOI = forecast_citation$doi,
-      URI = forecast_citation$url
-    ))
+    relatedItemIdentifierType = "URL",
+    relatedItemIdentifier = forecast_citation$url) %>% jsonlite::toJSON() %>% as.character()
 
+  dataobservaotry_related_item <- tibble(
+    RelatedItem = "dataobservaotry",
+    relatedItemType = "Software",
+    relationType = "isCompiledBy",
+    relatedItemIdentifier = "10.5281/zenodo.5034752",
+    relatedItemIdentifierType = "DOI"
+  ) %>% jsonlite::toJSON() %>% as.character()
 
+  eurostat_related_item <- tibble(
+    RelatedItem = "Retrieval and Analysis of Eurostat Open Data with the eurostat Package ",
+    relatedItemType = "Software",
+    relationType = "isCompiledBy",
+    relatedItemIdentifier = "https://ropengov.github.io/eurostat/",
+    relatedItemIdentifierType = "URL"
+  ) %>% jsonlite::toJSON() %>% as.character()
 
  cl_method <-  tibble::tribble(
     ~id, ~name, ~description, ~RelatedItem,
-    "A", "Actual values", "No method applied.", jsonlite::toJSON(""),
-    "O", "Missing values", "No method applied.", jsonlite::toJSON(""),
+    "A", "Actual values", "No method applied.", eurostat_related_item,
+    "O", "Missing values", "No method applied.", dataobservaotry_related_item,
     "locf", "Last Observation Carry Forward", "Replacing each missing item with the most recent non-missing prior to it.", zoo_related_item,
     "nocb", "Next Observation Carry Backwards", "Replacing each missing item with the next non-missing prior after it.", zoo_related_item,
     "approx", "Linear Approximation", "Replacing each missing item with interpolated values.", zoo_related_item,
     "forecast", "Forecasted for the variable.", "Forecasted with a time-series model.", forecast_related_item,
-    "backcast", "Backcasted for the variable.", "Backcasted with a time-series model.", forecast_related_item
+    "backcast", "Backcasted for the variable.", "Backcasted with a time-series model.", forecast_related_item,
+    "ETS(A,A,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with Holt’s linear method with additive errors.", forecast_related_item,
+    "ETS(A,Ad,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with the additive damped trend method.", forecast_related_item,
+    "ETS(M,A,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with the additive Holt’s linear method with multiplicative errors.", forecast_related_item,
+    "ETS(M,N,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with simple exponential smoothing with multiplicative errors.", forecast_related_item,
+    "ETS(M,Ad,N)", "Forecasted with exponentional smoothing", "Exponential smoothing (M, Ad, N)", forecast_related_item,
+    "ETS(A,N,N)", "Forecasted with exponentional smoothing", "Exponential smoothing (Additive trend, no seasonal component).", forecast_related_item
+
     )
 
  cl_method

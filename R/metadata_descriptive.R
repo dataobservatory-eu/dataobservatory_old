@@ -25,6 +25,7 @@
 #' @family persons functions
 #' @return A list of creators, in a list or in a JSON formatted character string.
 #' @export
+
 add_creators <- function(
   givenName, familyName,
   organizationalName = NULL,
@@ -324,7 +325,7 @@ add_identifiers <- function (
   } else if ( format == "list") {
     Identifiers
   } else if ( format == "json") {
-    stringr::str_sub(jsonlite::toJSON ( as_tibble(Identifiers) ), 2,-2)
+    jsonlite::toJSON (as_tibble(Identifiers))
     } else {
     stop("The parameter='format' must be either 'list' or 'json'")
   }
@@ -378,8 +379,8 @@ validate_identifier <- function (Identifier) {
 #' @param relatedItem The human readable title or name of the award (grant) as a character string.
 #' @param relationType Any of \code{isCitedBy}, \code{Cites}, \code{isSupplementTo}, \code{IsSupplementedBy}, \code{IsDerivedFrom}, \code{isSupplementedBy}, \code{isNewVersionOf}, \code{isPreviousVersionOf}, \code{IsOriginalFormOf}, \code{IsVariantFormOf}, \code{Documents}, \code{IsDocumentedBy}, \code{References}, \code{IsReferencedBy}, \code{IsPublishedIn}, \code{IsPreviousVersionOf}, \code{IsNewVersionOf}, \code{IsVersionOf}, \code{HasVersion}, \code{IsMetadataFor}, \code{HasMetadata}, \code{isPartOf}, \code{IsSourceOf}, \code{hasPart}, \code{compiles}, \code{isCompiledBy}, \code{isIdenticalTo}, \code{isAlternateIdentifier}, \code{Obsoletes}, \code{IsObsoletedBy}, \code{Requires}, \code{IsRequiredBy}, \code{Reviews}, \code{IsReviewedBy}. \cr
 #' @param relatedItemType \code{Audiovisual}, \code{Book}, \code{BookChapter}, \code{Collection}, \code{ComputationalNotebook}, \code{ConferencePaper}, \code{ConferenceProceeding}, \code{DataPaper}, \code{Dataset}, \code{Dissertation}, \code{Event}, \code{Image}, \code{InteractiveResource}, \code{Journal}, \code{JournalArticle}, \code{Model}, \code{OutputManagementPlan}, \code{PeerReview}, \code{PhysicalObject}, \code{Preprint}, \code{Report}, \code{Service}, \code{Software}, \code{Sound}, \code{Standard}, \code{Text}, \code{Workflow}, \code{Other}
-#'
-#' @param relatedItemIdentifer An Identifier created by
+#' @param relatedItemIdentifierType One of \code{ARK}, \code{arXiv}, \code{bibcode}, \code{DOI}, \code{EAN13}, \code{EISSN}, \code{Handle}, \code{IGSN}, \code{ISBN}, \code{ISSN}, \code{ISTC}, \code{LISSN}, \code{LSID}, \code{PMID}, \code{PURC}, \code{UPC}, \code{URL}, \code{URN}, \code{w3id}.
+#' @param relatedItemIdentifer The identifider as a character string.
 #'  \code{\link{add_identifiers}}.
 #' @importFrom jsonlite toJSON
 #' @examples
@@ -387,7 +388,8 @@ validate_identifier <- function (Identifier) {
 #'      RelatedItem = "First Related Item",
 #'      relatedItemType = "Dataset",
 #'      relationType = "IsDerivedFrom",
-#'      relatedItemIdentifier = add_identifiers (id = "first_rel_item"),
+#'      relatedItemIdentifierType = "Handle",
+#'      relatedItemIdentifier = "first_rel_item",
 #'      related_items = NULL,
 #'   format = 'json' )
 #'
@@ -395,7 +397,8 @@ validate_identifier <- function (Identifier) {
 #'     RelatedItem = "Second Related Item",
 #'     relatedItemType = "Dataset",
 #'     relationType = "IsDerivedFrom",
-#'     relatedItemIdentifier = add_identifiers (id = "second_rel_item"),
+#'     relatedItemIdentifierType = "Handle",
+#'     relatedItemIdentifier = "second_rel_item",
 #'     related_items = first_rel_item,
 #'     format = 'json' )
 #' @export
@@ -404,56 +407,63 @@ add_related_items <- function (
   relatedItemType = "Dataset",
   relationType = "IsDerivedFrom",
   relatedItemIdentifier,
+  relatedItemIdentifierType,
   related_items = NULL,
   format = 'json' ) {
 
   resource_types <- resource_types_datacite()
   relation_types <- relation_type_datacite()
-  validate_identifier(Identifier  = relatedItemIdentifier)
+  related_id_types <- related_identifiers_datacite()
 
-
-  not_one_of_relations <- paste (relation_types, collapse = ", ")
+  not_one_of_id_types <- paste (related_id_types, collapse = ", ")
 
   assertthat::assert_that(
-    length(relationType) == 1 & relatedItemType %in% resource_types,
-    msg = glue::glue("relatedItemType must be one of {not_one_of_relations}")
+    length(relatedItemIdentifierType) == 1 & tolower(relatedItemIdentifierType) %in% tolower(related_id_types),
+    msg = glue::glue("relatedItemType must be one of {not_one_of_id_types}")
   )
+
+  not_one_of_resources <- paste (resource_types, collapse = ", ")
+
+  assertthat::assert_that(
+    length(relatedItemType) == 1 & relatedItemType %in% resource_types,
+    msg = glue::glue("relatedItemType must be one of {not_one_of_resources}")
+  )
+
+  not_one_of_relations <- paste (relation_types, collapse = ", ")
 
   assertthat::assert_that(
     length(relationType) == 1 & relationType %in% relation_types,
     msg = glue::glue("relationType must be one of {not_one_of_relations}")
   )
 
-  RelatedItem <- list (
-    RelatedItem = RelatedItem,
-    relatedItemType = relatedItemType,
+
+  RelatedItem <- tibble::tibble (
+    scheme = relatedItemIdentifierType,
+    id = relatedItemIdentifier,
     relationType = relationType,
-    relatedItemIdentifier = relatedItemIdentifier
+    relatedItemType = relatedItemType
   )
 
-  RelatedItem <- RelatedItem [ ! vapply ( RelatedItem, is.null, logical(1))]
+  RelatedItem.JSON <- jsonlite::toJSON (jsonlite::unbox(RelatedItem))
+
 
   if ( !is.null(related_items) ) {
     if (all(vapply(related_items, is.json, logical(1)))) {
-      assertthat::assert_that(
-        all(vapply(related_items, validate_related_item, logical(1))),
-        msg = "Every related item must be strictly formatted."
-      )
 
       if ( is.json(related_items) ) {
-        related_items <- jsonlite::fromJSON(related_items)
+        RelatedItem  <- paste(c(RelatedItem.JSON, related_items), collapse = ", ")
       }
 
       if ( format == "list") {
         append(list(related_items), list(RelatedItem))
       } else {
-        jsonlite::toJSON(append(list(related_items), list(RelatedItem)))
+        RelatedItem
       }
     }
   } else if ( format == "list") {
     RelatedItem
   }  else if ( format=="json") {
-    jsonlite::toJSON(RelatedItem)
+    RelatedItem.JSON
   } else{
     stop("The parameter='format' must be either 'list' or 'json'")
   }
@@ -634,6 +644,8 @@ add_dates <- function ( Date = Sys.Date(),
   if (!is.null(Submitted)) dates$Submitted <- Submitted
   if (!is.null(Valid)) dates$Valid <- Valid
   if (!is.null(Withdrawn)) dates$Withdrawn <- Withdrawn
+
+  dates
 
   if (format=="json") {
     jsonlite::toJSON(dates)

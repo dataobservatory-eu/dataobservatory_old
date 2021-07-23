@@ -293,10 +293,9 @@ add_new_periods <- function (  indic, years = NULL, days = NULL ) {
 #' @return A tibble updated with with forecasted values.
 #' @export
 
-
 dataset_forecast <- function (dataset, forecast_periods = NULL) {
 
-  test_unique_observations(dataset)
+  #test_unique_observations(dataset)
 
   to_add_back <- dataset %>%
     select ( -all_of(c("value")))
@@ -369,12 +368,15 @@ dataset_forecast <- function (dataset, forecast_periods = NULL) {
     mutate ( method   = ifelse ( is.na(.data$value), "O", .data$method),
              obs_status = ifelse ( is.na(.data$value), "O", .data$obs_status))
 
-  dataset %>%
+  tmp <- dataset %>%
     dplyr::full_join (
       dplyr::anti_join (new_forecasted_values, dataset,
                         by = c("time", "freq", "geo", "value", "obs_status", "method")
                         ),
       by = c("time", "geo", "value", "obs_status", "freq", "method")
-      )
+      ) %>%
+    tidyr::fill (all_of(names ( to_add_back) [! names(to_add_back) %in% names (new_forecasted_values)]))
+
+  tmp
 }
 
