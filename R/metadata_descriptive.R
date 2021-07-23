@@ -781,7 +781,7 @@ add_geolocation <- function(dat,
 }
 
 
-#' @Title Valid related identifiers
+#' @title Valid related identifiers
 #' @keywords internal
 related_identifiers_datacite <- function() {
   c("ARK", "arXiv", "bibcode", "DOI", "EAN13", "EISSN", "Handle",

@@ -9,6 +9,7 @@ add_related_items(
   relatedItemType = "Dataset",
   relationType = "IsDerivedFrom",
   relatedItemIdentifier,
+  relatedItemIdentifierType,
   related_items = NULL,
   format = "json"
 )
@@ -18,9 +19,11 @@ add_related_items(
 
 \item{relationType}{Any of \code{isCitedBy}, \code{Cites}, \code{isSupplementTo}, \code{IsSupplementedBy}, \code{IsDerivedFrom}, \code{isSupplementedBy}, \code{isNewVersionOf}, \code{isPreviousVersionOf}, \code{IsOriginalFormOf}, \code{IsVariantFormOf}, \code{Documents}, \code{IsDocumentedBy}, \code{References}, \code{IsReferencedBy}, \code{IsPublishedIn}, \code{IsPreviousVersionOf}, \code{IsNewVersionOf}, \code{IsVersionOf}, \code{HasVersion}, \code{IsMetadataFor}, \code{HasMetadata}, \code{isPartOf}, \code{IsSourceOf}, \code{hasPart}, \code{compiles}, \code{isCompiledBy}, \code{isIdenticalTo}, \code{isAlternateIdentifier}, \code{Obsoletes}, \code{IsObsoletedBy}, \code{Requires}, \code{IsRequiredBy}, \code{Reviews}, \code{IsReviewedBy}. \cr}
 
+\item{relatedItemIdentifierType}{One of \code{ARK}, \code{arXiv}, \code{bibcode}, \code{DOI}, \code{EAN13}, \code{EISSN}, \code{Handle}, \code{IGSN}, \code{ISBN}, \code{ISSN}, \code{ISTC}, \code{LISSN}, \code{LSID}, \code{PMID}, \code{PURC}, \code{UPC}, \code{URL}, \code{URN}, \code{w3id}.}
+
 \item{relatedItem}{The human readable title or name of the award (grant) as a character string.}
 
-\item{relatedItemIdentifer}{An Identifier created by
+\item{relatedItemIdentifer}{The identifider as a character string.
 \code{\link{add_identifiers}}.}
 }
 \description{
@@ -39,7 +42,8 @@ first_rel_item <- add_related_items (
      RelatedItem = "First Related Item",
      relatedItemType = "Dataset",
      relationType = "IsDerivedFrom",
-     relatedItemIdentifier = add_identifiers (id = "first_rel_item"),
+     relatedItemIdentifierType = "Handle",
+     relatedItemIdentifier = "first_rel_item",
      related_items = NULL,
   format = 'json' )
 
@@ -47,7 +51,8 @@ add_related_items (
     RelatedItem = "Second Related Item",
     relatedItemType = "Dataset",
     relationType = "IsDerivedFrom",
-    relatedItemIdentifier = add_identifiers (id = "second_rel_item"),
+    relatedItemIdentifierType = "Handle",
+    relatedItemIdentifier = "second_rel_item",
     related_items = first_rel_item,
     format = 'json' )
 }
