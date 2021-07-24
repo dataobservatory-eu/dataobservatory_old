@@ -12,9 +12,8 @@ ids <- c("teicp090", "ISOC_CICCE_USE",
 download_data <- function() {
   tin00028 <- get_eurostat ("tin00028")
   tin00092 <- get_eurostat('tin00092')
-  ISOC_CICCI_USE <- get_eurostat(tolower("ISOC_CICCI_USE"))
+  isoc_cicci_use <- get_eurostat(tolower("isoc_cicci_use"))
   consumption <- get_eurostat (id = tolower('HBS_EXP_T121'))
-
 }
 
 
@@ -30,13 +29,12 @@ never_used_internet <-  dataset_eurostat(dat = tin00028 %>%
                    filter ( .data$indic_is == "I_IUX"),
                  dataset_code = "ind_never_use_internet",
                  eurostat_id = "tin00028",
+                 doi = "10.5281/zenodo.5121507",
                  description = "Percentage of individuals who never used the internet in the population group aged 16 to 74",
                  Subject = "Music industry",
                  Contributor= "Vitos, Botond",
                  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Internet users"),
                  Title = "Population Who Never Used Internet")
-
-doi = "10.5281/zenodo.5121507"
 
 
 test_codebook <- never_used_internet$codebook[[1]]
@@ -70,29 +68,82 @@ daily_internet_users <- dataset_eurostat(dat = tin00092,
 #[I_CC_OTH] Internet storage space use: to save or share other things
 #[I_CC_MV] Internet storage space use: to save or share music and videos
 
-unique(ISOC_CICCI_USE$ind_type )
+unique(isoc_cicci_use$ind_type )
 
-ind_cloud_storage_files <- ISOC_CICCI_USE  %>%
+ind_cloud_storage_files <- isoc_cicci_use  %>%
   filter ( .data$indic_is == "I_CC",
-           .data$ind_type == "IND_TOTAL")
+           .data$ind_type == "IND_TOTAL",
+           .data$unit == "PC_IND")
 
-ind_cloud_storage_files <- dataset_eurostat(dat = ind_cloud_storage_files,
-                                         dataset_code = "ind_cloud_storage_files",
-                                         eurostat_id = tolower("ISOC_CICCI_USE"),
-                                         description = "Percentage of individuals who use internet storage space to save documents, pictures, music, video or other files",
-                                         Subject = "Music industry",
-                                         Contributor= "Vitos, Botond",
-                                         keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Internet users"),
-                                         Title = "Individuals Who Use Cloud Storage")
+unique ( ind_cloud_storage_files$unit)
+
+ind_cloud_storage_files <- dataset_eurostat(
+  dat = ind_cloud_storage_files,
+  doi = '10.5281/zenodo.5126841',
+  dataset_code = "ind_cloud_storage_files",
+  eurostat_id = tolower("isoc_cicci_use"),
+  description = "Percentage of individuals who use internet storage space to save documents, pictures, music, video or other files",
+  Subject = "Music industry",
+  Contributor= "Vitos, Botond",
+  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Internet users"),
+  Title = "Individuals Who Use Cloud Storage")
 
 
-student_cloud_storage_files <- ISOC_CICCI_USE  %>%
+student_cloud_storage_files <- isoc_cicci_use  %>%
   filter ( .data$indic_is == "I_CC",
-           .data$ind_type == "STUD")
+           .data$ind_type == "STUD",
+           .data$unit == "PC_IND")
+
+
+cloud_storage <- ind_cloud_storage_files$dataset[[1]] %>%
+  left_join ( group_european_countries(), by = "geo") %>%
+  mutate ( group = ifelse (.data$geo == 'TR', 'Southeast', .data$group))
+
+dat <- cloud_storage %>% filter ( .data$group == "Visegrad")
+create_single_plot <- function (dat) {
+  single_palette <-  palette_eu_countries()
+  single_palette <- single_palette[names(single_palette) %in% unique(dat$geo)]
+
+  dat %>%
+    ggplot ( aes ( x=time, y = value, color = geo) ) +
+    geom_line() +
+    scale_color_manual (values =single_palette) +
+    scale_y_continuous( limits = c(0,100)) +
+    scale_x_date() +
+    labs ( color =NULL, x =NULL, y =NULL) +
+    theme ( legend.position = 'bottom',
+            legend.text = element_text(size = 8))
+}
+
+
+storage_plots <-lapply ( unique(group_european_countries()$group),
+         function(x) as_tibble(cloud_storage) %>%
+           filter(.data$group == x) %>% create_single_plot()  )
+
+library(grid)
+g <- gridExtra::grid.arrange(
+  storage_plots[[2]],
+  storage_plots[[3]], storage_plots[[4]],
+  storage_plots[[5]], storage_plots[[6]],
+  storage_plots[[7]], storage_plots[[8]],
+  storage_plots[[9]], storage_plots[[1]],
+  ncol = 3,
+  top=grid::textGrob("Cloud Storage Use", gp=gpar(fontsize=15)),
+  left = "Percentage of individuals, %",
+  bottom = grid::textGrob("\ua9 Daniel Antal, music.dataobservatory.eu, 2021. Percentage of individuals who use internet storage space to save documents, pictures, music, video or other files.",
+                          gp=gpar(fontsize=9), hjust=0.6)
+)
+
+
+ggsave( "data-raw/cloud_storage_plot.png",
+        plot = g, units = "cm", width = 30, height = 20, dpi = 300)
+
+write.csv ( as_tibble ( cloud_storage), "data-raw/cloud_storage.csv", row.names=F)
+write.csv ( as_tibble ( ind_cloud_storage_files$codebook[[1]]), "data-raw/cloud_storage_codebook.csv", row.names=FALSE)
 
 student_cloud_storage_files <- dataset_eurostat(dat = student_cloud_storage_files,
                                             dataset_code = "student_cloud_storage_files",
-                                            eurostat_id = tolower("ISOC_CICCI_USE"),
+                                            eurostat_id = tolower("isoc_cicci_use"),
                                             description = "Percentage of students who use internet storage space to save documents, pictures, music, video or other files",
                                             Subject = "Music industry",
                                             Contributor= "Vitos, Botond",

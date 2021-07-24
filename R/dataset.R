@@ -45,7 +45,8 @@ dataset <- function(x,
                     freq,
                     unit,
                     unit_name,
-                    source = "greendeal.dataobservatory.eu") {
+                    source = "greendeal.dataobservatory.eu",
+                    doi = NULL) {
 
 
   assertthat::assert_that(inherits(x, "data.frame"),
@@ -62,7 +63,8 @@ dataset <- function(x,
                freq = freq,
                unit = unit,
                unit_name = unit_name,
-               source=source)
+               source=source,
+               doi = doi)
 
 }
 
@@ -179,7 +181,8 @@ new_dataset <- function(x,
                         freq,
                         unit,
                         unit_name,
-                        source) {
+                        source,
+                        doi) {
 
   x$dataset_code <- dataset_code
 
@@ -201,6 +204,9 @@ new_dataset <- function(x,
   attr(new_dataset, "latest_actual_observation")   <- max(actual_observations$time, na.rm=TRUE)
 
   attr(new_dataset, "sessionInfo") <- add_sessioninfo()
+
+  if(!is.null(doi)) attr(new_dataset, "DOI") <- doi
+
   new_dataset
 }
 
