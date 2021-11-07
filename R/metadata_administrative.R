@@ -315,12 +315,18 @@ cl_method <-function () {
     "approx", "Linear Approximation", "Replacing each missing item with interpolated values.", zoo_related_item,
     "forecast", "Forecasted for the variable.", "Forecasted with a time-series model.", forecast_related_item,
     "backcast", "Backcasted for the variable.", "Backcasted with a time-series model.", forecast_related_item,
-    "ETS(A,A,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with Holt’s linear method with additive errors.", forecast_related_item,
-    "ETS(A,Ad,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with the additive damped trend method.", forecast_related_item,
-    "ETS(M,A,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with the additive Holt’s linear method with multiplicative errors.", forecast_related_item,
-    "ETS(M,N,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with simple exponential smoothing with multiplicative errors.", forecast_related_item,
-    "ETS(M,Ad,N)", "Forecasted with exponentional smoothing", "Exponential smoothing (M, Ad, N)", forecast_related_item,
-    "ETS(A,N,N)", "Forecasted with exponentional smoothing", "Exponential smoothing (Additive trend, no seasonal component).", forecast_related_item
+    "Backcast ETS(A,A,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with Holt’s linear method with additive errors.", forecast_related_item,
+    "Backcast ETS(A,Ad,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with the additive damped trend method.", forecast_related_item,
+    "Backcast ETS(M,A,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with the additive Holt’s linear method with multiplicative errors.", forecast_related_item,
+    "Backcast ETS(M,N,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with simple exponential smoothing with multiplicative errors.", forecast_related_item,
+    "Backcast ETS(M,Ad,N)", "Forecasted with exponentional smoothing", "Exponential smoothing (M, Ad, N)", forecast_related_item,
+    "Backcast ETS(A,N,N)", "Forecasted with exponentional smoothing", "Exponential smoothing (Additive trend, no seasonal component).", forecast_related_item,
+    "Forecast ETS(A,A,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with Holt’s linear method with additive errors.", forecast_related_item,
+    "Forecast ETS(A,Ad,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with the additive damped trend method.", forecast_related_item,
+    "Forecast ETS(M,A,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with the additive Holt’s linear method with multiplicative errors.", forecast_related_item,
+    "Forecast ETS(M,N,N)", "Forecasted with exponentional smoothing", "Exponential smoothing with simple exponential smoothing with multiplicative errors.", forecast_related_item,
+    "Forecast ETS(M,Ad,N)", "Forecasted with exponentional smoothing", "Exponential smoothing (M, Ad, N)", forecast_related_item,
+    "Forecast ETS(A,N,N)", "Forecasted with exponentional smoothing", "Exponential smoothing (Additive trend, no seasonal component).", forecast_related_item
 
     )
 

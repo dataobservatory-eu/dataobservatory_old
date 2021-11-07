@@ -98,9 +98,9 @@ codebook_dataset <- function(dataset) {
     left_join ( cl_method(),  by = c("id") )
 
   codebook <- codebook %>%
-    bind_rows ( codebook_obs_status) %>%
-    bind_rows ( codebook_freq) %>%
-    bind_rows (codebook_methods) %>%
+    bind_rows ( codebook_obs_status ) %>%
+    bind_rows ( codebook_freq ) %>%
+    bind_rows (codebook_methods ) %>%
     mutate ( id = ifelse(is.na(.data$id), "", .data$id)) %>%
     mutate ( name = ifelse (.data$id =="", "<missing>", .data$name)) %>%
     arrange ( .data$var_name, .data$id ) %>%

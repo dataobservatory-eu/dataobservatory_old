@@ -189,8 +189,13 @@ new_dataset <- function(x,
   new_dataset <- x %>%
     select (any_of(c("dataset_code", "time", "geo", "value", "unit",
                       "obs_status", "method", "freq")))
+
   new_dataset$unit        <- unit
-  new_dataset$obs_status  <- ifelse ( !is.na(new_dataset$value), "A", "O")
+  new_dataset$obs_status  <- case_when(
+    is.na(new_dataset$value) ~ "O",
+    !is.na(new_dataset$obs_status) ~ new_dataset$obs_status,
+    is.na(new_dataset$obs_status) & !is.na(new_dataset$value) ~ "A",
+    TRUE ~ "<unknown>")
   new_dataset$freq        <- freq
   attr(new_dataset, "dataset_code") <- dataset_code
   attr(new_dataset, "Title") <- dataset_title

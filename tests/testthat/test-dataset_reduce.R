@@ -8,7 +8,7 @@ tr1 <- data.frame (
 )
 
 
-dfr <- reduce_dataset (df=tr1)
+dfr <- dataset_reduce (x=tr1)
 
 test_that("reduction left no NA values", {
   expect_true(sum(is.na(dfr))==0)

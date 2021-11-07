@@ -16,7 +16,40 @@ download_data <- function() {
   sbs_na_1a_se_r2 <- get_eurostat("sbs_na_1a_se_r2")
   isoc_cicci_use <- get_eurostat(tolower("isoc_cicci_use"))
   consumption <- get_eurostat (id = tolower('HBS_EXP_T121'))
+  gdp_aggregates <- get_eurostat( id = tolower('tec00001'))
+  population <- get_eurostat("demo_pjan")
 }
+
+# 	Gross domestic product at market prices
+
+gdp <- gdp_aggregates %>%
+   filter ( .data$unit == "CP_MEUR")
+
+gdp_per_capita  <- gdp_aggregates %>%
+  filter ( .data$unit == "CP_EUR_HAB")
+
+gdp_meur <- dataset_eurostat(
+  dat = gdp,
+  dataset_code = "gdp",
+  eurostat_id = "tec00001",
+  doi = '10.5281/zenodo.5652034',
+  description = "Gross domestic product at market prices",
+  Subject = "Turnover (Business)",
+  Contributor= "",
+  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Gross Domestic Product"),
+  Title = "Gross domestic product at market prices")
+
+
+gdp_pc <- dataset_eurostat(
+  dat = gdp_per_capita,
+  dataset_code = "gdp_per_capita",
+  eurostat_id = "tec00001",
+  doi = '10.5281/zenodo.5652034',
+  description = "Gross domestic product at market prices",
+  Subject = "Turnover (Business)",
+  Contributor= "",
+  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Gross Domestic Product"),
+  Title = "Gross domestic product at market prices")
 
 # tgs00050 Individuals regularly using the internet by NUTS 2 regions
 # tin00032 discontinued
@@ -25,22 +58,10 @@ download_data <- function() {
 #Individuals using the internet to buy or order online content[tin00080]
 #% of individuals aged 16 to 74
 
-names ( sbs_na_1a_se_r2  )
-
-
 turnover_radio_broadcasting <- sbs_na_1a_se_r2 %>%
   filter ( .data$nace_r2 == "J601") %>%
   filter ( .data$indic_sb == "V12110") %>%
   mutate ( unit = "EUR")
-
-
-tbc_dataset <- dataset (
-  x= turnover_radio_broadcasting,
-  dataset_code = "turnover_radio_broadcasting",
-  dataset_title = "Turnover in Radio Broadcasting",
-  freq = "A",
-  unit = "MEUR",
-  unit_name = "million euro")
 
 turnover_television <- sbs_na_1a_se_r2 %>%
   filter ( .data$nace_r2 == "J602") %>%
@@ -62,34 +83,28 @@ trb <- dataset_eurostat(
   dat = turnover_radio_broadcasting,
   dataset_code = "turnover_radio_broadcasting",
   eurostat_id = "sbs_na_1a_se_r2",
-  doi = "10.5281/zenodo.5651180",
+  doi = "10.5281/zenodo.5652118",
   description = "Turnover of radio broadcasting enterprises",
   Subject = "Turnover (Business)",
   Contributor= "Vitos, Botond",
-  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Radio broadcasting"),
+  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Radio broadcasting"), #http://id.loc.gov/authorities/subjects/sh85110448.html (radio broadcasting)
   Title = "Turnover of Radio Broadcasting Industry")
 
-create_indicator_folder(trb, "Turnover of Radio Broadcasting Industry in Europe",
-                        left = "million euro")
 
-View ( trb$data[[1]])
 
-View ( trb$codebook[[1]] )
-
-#http://id.loc.gov/authorities/subjects/sh85110448.html (radio broadcasting)
 
 #https://id.loc.gov/authorities/subjects/sh87003409.html
 #https://id.loc.gov/authorities/subjects/sh85088813.html
 
 trrp <- dataset_eurostat(
-  dat = turnover_radio_broadcasting,
+  dat = turnover_recording_publishing,
   dataset_code = "turnover_recorded_music",
   eurostat_id = "sbs_na_1a_se_r2",
-  doi = '10.5281/zenodo.5649234',
+  doi = '10.5281/zenodo.5652113',
   description = "Turnover of recording and publishing enterprises",
   Subject = "Turnover (Business)",
   Contributor= "Vitos, Botond",
-  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Radio broadcasting"),
+  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Music publishing", "Record labels"),
   Title = "Turnover of Radio Broadcasting Industry")
 
 
@@ -112,9 +127,6 @@ never_used_internet <-  dataset_eurostat(dat = tin00028 %>%
                  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Internet users"),
                  Title = "Population Who Never Used Internet")
 
-
-test_codebook <- never_used_internet$codebook[[1]]
-test_codebook$RelatedItem[1]
 
 daily_internet_users <- dataset_eurostat(dat = tin00092,
                                          dataset_code = "ind_daily_use_internet",
@@ -146,7 +158,7 @@ daily_internet_users <- dataset_eurostat(dat = tin00092,
 
 unique(isoc_cicci_use$ind_type )
 
-ind_cloud_storage_files <- isoc_cicci_use  %>%
+ind_cloud_storage_files_data <- isoc_cicci_use  %>%
   filter ( .data$indic_is == "I_CC",
            .data$ind_type == "IND_TOTAL",
            .data$unit == "PC_IND")
@@ -154,14 +166,14 @@ ind_cloud_storage_files <- isoc_cicci_use  %>%
 unique ( ind_cloud_storage_files$unit)
 
 ind_cloud_storage_files <- dataset_eurostat(
-  dat = ind_cloud_storage_files,
-  doi = '10.5281/zenodo.5126841',
+  dat = ind_cloud_storage_files_data,
+  doi = '10.5281/zenodo.5652124',
   dataset_code = "ind_cloud_storage_files",
   eurostat_id = tolower("isoc_cicci_use"),
   description = "Percentage of individuals who use internet storage space to save documents, pictures, music, video or other files",
   Subject = "Music industry",
   Contributor= "Vitos, Botond",
-  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Internet users"),
+  keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Internet users", "Computer storage devices"),
   Title = "Individuals Who Use Cloud Storage")
 
 
@@ -175,8 +187,8 @@ cloud_storage <- ind_cloud_storage_files$dataset[[1]] %>%
   left_join ( group_european_countries(), by = "geo") %>%
   mutate ( group = ifelse (.data$geo == 'TR', 'Southeast', .data$group))
 
-dat <- cloud_storage %>% filter ( .data$group == "Visegrad")
-create_single_plot <- function (dat) {
+
+create_single_storage_plot <- function (dat) {
   single_palette <-  palette_eu_countries()
   single_palette <- single_palette[names(single_palette) %in% unique(dat$geo)]
 
@@ -193,7 +205,6 @@ create_single_plot <- function (dat) {
 
 
 source(file.path("not_included/create_indicator_folder.R"))
-storage_plots <- create_storage_plots( trrp$data[[1]])
 
 
 student_cloud_storage_files <- dataset_eurostat(dat = student_cloud_storage_files,
@@ -227,10 +238,25 @@ consumption_music_instruments_pps_hh <- dataset_eurostat(dat = consumption %>%
                                                        keywords = c("dmo", "Music industry", "Demand (Economic theory)", "Musical instruments"),
                                                        Title = "Expenditure on Music Instruments")
 
+create_indicator_folder(trrp, "Turnover of Radio Broadcasting Industry in Europe",
+                        left = "million euro")
 
-snakecase::to_title_case("Individuals Who Use Cloud Storage")
+create_indicator_folder(trb, "Turnover of Radio Broadcasting Industry in Europe",
+                        left = "million euro")
+
+create_indicator_folder(gdp_meur,
+                        title_text = "Gross Domestic Product at Market Prices",
+                        left_text = "")
+
+create_indicator_folder(trb, "Turnover of Radio Broadcasting Industry in Europe",
+                        left = "million euro")
 
 
+create_indicator_folder(ind_cloud_storage_files,
+                        "Cloud Storage Use in Europe",
+                        left = "% of individuals")
+
+View(ind_cloud_storage_files$codebook[[1]])
 
 music_observatory_datasets <- as_tibble(never_used_internet$dataset[[1]]) %>%
   bind_rows ( as_tibble(daily_internet_users$dataset[[1]])) %>%
@@ -238,7 +264,9 @@ music_observatory_datasets <- as_tibble(never_used_internet$dataset[[1]]) %>%
   bind_rows( as_tibble(consumption_music_instruments_pps_hh$dataset[[1]])) %>%
   bind_rows( as_tibble(student_cloud_storage_files$dataset[[1]])) %>%
   bind_rows( as_tibble(ind_cloud_storage_files$dataset[[1]])) %>%
-  bind_rows( as_tibble(trrp$dataset[[1]]))
+  bind_rows( as_tibble(trrp$dataset[[1]])) %>%
+  bind_rows( as_tibble(gdp_meur$dataset[[1]])) %>%
+  bind_rows ( as_tibble(gdp_pc$dataset[[1]]))
 
 
 never_used_internet_datacite <- never_used_internet$datacite[[1]]
@@ -247,13 +275,15 @@ never_used_internet_datacite$RelatedIdentifier <- as.character(add_identifiers("
 
 jsonlite::validate(add_identifiers("ind_never_use_internet", dataset_code = "ind_never_use_internet", DOI = "10.5281/zenodo.5121507"))
 
-music_observatory_datacite <- as_tibble(never_used_internet_datacite ) %>%
+music_observatory_datacite <- as_tibble(never_used_internet$datacite[[1]] ) %>%
   bind_rows( as_tibble(daily_internet_users$datacite[[1]])) %>%
   bind_rows( as_tibble(consumption_recording_media_pps_hh$datacite[[1]])) %>%
   bind_rows( as_tibble(consumption_music_instruments_pps_hh$datacite[[1]])) %>%
   bind_rows( as_tibble(student_cloud_storage_files$datacite[[1]])) %>%
   bind_rows( as_tibble(ind_cloud_storage_files$datacite[[1]])) %>%
-  bind_rows( as_tibble(trrp$datacite[[1]]))
+  bind_rows( as_tibble(trrp$datacite[[1]])) %>%
+  bind_rows( as_tibble(gdp_meur$datacite[[1]])) %>%
+  bind_rows ( as_tibble(gdp_pc$datacite[[1]]))
 
 
 music_observatory_codebook <- as_tibble(never_used_internet$codebook[[1]]) %>%
@@ -263,6 +293,8 @@ music_observatory_codebook <- as_tibble(never_used_internet$codebook[[1]]) %>%
   bind_rows( as_tibble(student_cloud_storage_files$codebook[[1]])) %>%
   bind_rows( as_tibble(ind_cloud_storage_files$codebook[[1]])) %>%
   bind_rows( as_tibble(trrp$codebook[[1]])) %>%
+  bind_rows( as_tibble(gdp_meur$codebook[[1]])) %>%
+  bind_rows ( as_tibble(gdp_pc$codebook[[1]]))  %>%
   filter ( complete.cases(.))
 
 
@@ -303,10 +335,3 @@ my_codebook <- DBI::dbReadTable(disc_con, "codebook")
 DBI::dbDisconnect(con)
 DBI::dbDisconnect(disc_con)
 
-trrp$data[[1]] %>%
-  group_by (.data$obs_status) %>%
-  add_count () %>%
-  distinct ( obs_status, method, n)
-
-
-View ( trrp$data[[1]])
