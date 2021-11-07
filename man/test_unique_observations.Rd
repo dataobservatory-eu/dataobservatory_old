@@ -4,10 +4,10 @@
 \alias{test_unique_observations}
 \title{Test Unique Observations for Approximation functions.}
 \usage{
-test_unique_observations(dataset, stop_on_error = FALSE)
+test_unique_observations(x, stop_on_error = FALSE)
 }
 \arguments{
-\item{dataset}{An dataset table to test.}
+\item{x}{A data frame or a dataset table to test.}
 
 \item{stop_on_error}{Defaults to \code{TRUE} when the code stops with an error
 message.  If \code{FALSE}, it displays non-unique values.}

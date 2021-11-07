@@ -17,9 +17,7 @@
 load_eurostat_metadata <- function ( envir = globalenv(),
                                      path = tempdir() ) {
 
-  if ( file.exists(
-    file.path(tempdir(), "eurostat_metadata.rda"))
-  ) {
+  if ( file.exists(file.path(tempdir(), "eurostat_metadata.rda")) ) {
    load ( file.path(tempdir(), "eurostat_metadata.rda") )
   } else {
     var_labels   <- eurostat::get_eurostat_dic ( "dimlst",    lang = "en" )

@@ -4,11 +4,14 @@
 \alias{na_locf}
 \title{Last observation carry forward}
 \usage{
-na_locf(dataset)
+na_locf(dataset, ...)
 }
 \arguments{
 \item{dataset}{A data frame, tibble or dataset object created by \code{\link{dataset}},
 with time, geo, value, frequency, obs_status and method columns.}
+
+\item{...}{Pass on arguments of \code{\link[zoo]{na.locf}}. The zoo defaults settings are
+changed to \code{maxgap=1}.}
 }
 \value{
 A tibble updated with the forward carried values.

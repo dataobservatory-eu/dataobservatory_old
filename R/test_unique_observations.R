@@ -4,7 +4,7 @@
 #'
 #' Approximation and other filling techniques require unique observations.
 #'
-#' @param dataset A data frame or a dataset table to test.
+#' @param x A data frame or a dataset table to test.
 #' @importFrom dplyr select group_by add_count filter distinct_all
 #' @importFrom rlang .data
 #' @return \code{TRUE} if the test is met, otherwise \code{FALSE}.
@@ -19,28 +19,50 @@
 #' }
 #' @export
 
-is_unique_observations <- function( dataset ) {
+is_unique_observations <- function( x ) {
 
   assertthat::assert_that(
-    all ( c("geo", "time", "value", "obs_status") %in% names(dataset)),
-    msg = "The dataset must have geo, time, value, obs_status variable columns."
+    inherits(x, "data.frame"),
+    msg = "Object 'x' must be a data frame or inherit data.frame properties."
   )
 
-  if ( "unit" %in% names (dataset) ) {
+  assertthat::assert_that(
+    "geo" %in% names(x),
+    msg = "The dataset must have a 'geo' variable column."
+  )
+
+  assertthat::assert_that(
+    "value" %in% names(x),
+    msg = "Object 'x' must have a 'value' variable column."
+  )
+
+
+  assertthat::assert_that(
+    "time" %in% names(x),
+    msg = "Object 'x' must have a 'time' variable column."
+  )
+
+  assertthat::assert_that(
+    "obs_status" %in% names(x),
+    msg = "Object 'x' must have a 'obs_status' variable column."
+  )
+
+
+  if ( "unit" %in% names (x) ) {
     assertthat::assert_that(
-      length(unique(dataset$unit)) < 2,
-      msg = "The dataset must have a unique unit."
+      length(unique(x$unit)) < 2,
+      msg = "Object 'x' must have a unique unit."
     )
   }
 
-  if ( "unit_name" %in% names (dataset) ) {
+  if ( "unit_name" %in% names (x) ) {
     assertthat::assert_that(
-      length(unique(dataset$unit_name)) < 2,
-      msg = "The dataset must have a unique unit_name."
+      length(unique(x$unit_name)) < 2,
+      msg = "Object 'x' must have a unique unit_name."
     )
   }
 
-  uniqueness <- dataset %>%
+  uniqueness <- x %>%
     dplyr::select ( all_of(c("geo", "time", "value", "obs_status")) ) %>%
     dplyr::group_by ( .data$geo, .data$time, .data$value ) %>%
     dplyr::add_count() %>%
@@ -59,7 +81,7 @@ is_unique_observations <- function( dataset ) {
 #'
 #' This is an internal function and can give either a warning or
 #'
-#' @param dataset An dataset table to test.
+#' @param x A data frame or a dataset table to test.
 #' @param stop_on_error Defaults to \code{TRUE} when the code stops with an error
 #' message.  If \code{FALSE}, it displays non-unique values.
 #' @importFrom dplyr select group_by add_count filter distinct_all
@@ -69,12 +91,12 @@ is_unique_observations <- function( dataset ) {
 #' and returns \code{FALSE} or stops with an error if \code{stop_on_error = TRUE}.
 #' @keywords internal
 
-test_unique_observations <- function( dataset, stop_on_error = FALSE ) {
+test_unique_observations <- function( x, stop_on_error = FALSE ) {
 
-  ifelse ( is_unique_observations(dataset),
+  ifelse ( is_unique_observations(x),
            return(TRUE), ifelse ( stop_on_error,
-                          stop("Non-unique values found in ", head(dataset)),
-                          warning("Non-unique values found in ", head(dataset))) )
+                          stop("Non-unique values found in ", head(x)),
+                          warning("Non-unique values found in ", head(x))) )
 
   FALSE
 }

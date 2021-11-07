@@ -4,10 +4,10 @@
 \alias{is_unique_observations}
 \title{Test Unique Observations}
 \usage{
-is_unique_observations(dataset)
+is_unique_observations(x)
 }
 \arguments{
-\item{dataset}{A data frame or a dataset table to test.}
+\item{x}{A data frame or a dataset table to test.}
 }
 \value{
 \code{TRUE} if the test is met, otherwise \code{FALSE}.

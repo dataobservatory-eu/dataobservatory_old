@@ -14,7 +14,8 @@ dataset(
   freq,
   unit,
   unit_name,
-  source = "greendeal.dataobservatory.eu"
+  source = "greendeal.dataobservatory.eu",
+  doi = NULL
 )
 
 is.dataset(x)

@@ -4,7 +4,7 @@
 \alias{na_nocb}
 \title{Next observation carry back}
 \usage{
-na_nocb(dataset)
+na_nocb(dataset, ...)
 }
 \arguments{
 \item{dataset}{A data frame, tibble or dataset object created by \code{\link{dataset}},

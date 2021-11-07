@@ -4,7 +4,7 @@
 \alias{na_approx}
 \title{Linear approximation of missing values}
 \usage{
-na_approx(dataset)
+na_approx(dataset, ...)
 }
 \arguments{
 \item{dataset}{A data frame, tibble or dataset object created by \code{\link{dataset}},
