@@ -20,8 +20,13 @@ library(dataobservatory, quietly = TRUE)
 
 The `dataset` S3 class is an extension of the data frame and tibble class.  It has some important metadata attributes that help the documentation of the dataset. Furthermore, it has an adequate `print` and `summary` method.
 
-```{r small-population, message=FALSE, warning=FALSE}
+```{r smallpop}
 data("small_population")
+small_population
+```
+
+
+```{r small-population, message=FALSE}
 small_population_dataset <- dataset (
   x= small_population,
   dataset_code = "small_population_total",

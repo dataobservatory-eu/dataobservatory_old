@@ -1,6 +1,60 @@
-#' Remove empty rows
+#' @title Add observation status
 #'
-#' Remove completely empty rows before transforming into ts object.
+#' @description Adds the observation status \code{A} for values that are not
+#' missing and \code{O} for missing ones.
+#'
+#' @details The SDMX Code List for Observation Status differentiates \code{O}: Missing value and
+#' \code{M}: Missing value - data cannot exist. Differentiation must be made by the data curator,
+#' as it requires a knowledge of the cause of missingness.
+#'
+#' @param dat A data frame.
+#' @importFrom rlang .data
+#' @importFrom glue glue
+#' @importFrom dplyr mutate
+#' @examples{
+#' add_observation_status(
+#'   data.frame (
+#'        time = rep(as.Date (paste0(2010:2020, "-01-01")),2),
+#'        geo = c(rep("SE", 11), rep("FI", 11)),
+#'        value = c(1:10, NA_real_, NA_real_, 2:11)
+#'   )
+#' )
+#' }
+#' @keywords export
+
+add_observation_status <-function(dat) {
+
+  assert_that(inherits(dat, "data.frame"),
+              msg = "dat must be a data.frame or inherited from data.frame."
+  )
+
+  mandatory_vars <- c("time", "geo", "value")
+  missing_vars <- mandatory_vars [which(!mandatory_vars %in% names(dat))]
+  missing_text <- paste(missing_vars, collapse = ", ", sep = ", ")
+
+  assert_that( length(missing_vars)==0,
+               msg = glue::glue ( "Missing variables in the dataset: {missing_text}."))
+
+  if ( !"obs_status" %in% names(dat) ) {
+    dat <- dat %>%
+      mutate ( obs_status = ifelse (is.na(dat$value), "O", "A"))
+  }
+
+  if ( !"method" %in% names(dat) ) {
+    dat <- dat %>%
+      mutate ( method = .data$obs_status )
+  }
+
+  validate_dataframe(dat)
+
+  dat
+
+}
+
+
+#' @title Remove empty rows
+#'
+#' @description Remove completely empty rows before transforming into ts object.
 #'
 #' @param dat A data frame, tibble or dataset object created by \code{\link{dataset}},
 #' with time, geo, value, frequency, obs_status and method columns.
@@ -117,6 +171,9 @@ add_new_periods <- function ( indic, years = NULL, days = NULL ) {
 
 }
 
+#' @keywords internal
 is_long_form <- function(dat) {
   if ( "geo" %in% names (dat) ) TRUE else FALSE
 }
+
+

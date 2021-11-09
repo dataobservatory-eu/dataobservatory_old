@@ -15,7 +15,8 @@ dataset(
   unit,
   unit_name,
   source = "greendeal.dataobservatory.eu",
-  doi = NULL
+  doi = NULL,
+  add_obs_status = TRUE
 )
 
 is.dataset(x)
@@ -40,7 +41,13 @@ given by \code{\link{add_titles}}.}
 
 \item{source}{A source, currently defaults to \code{"greendeal.dataobservatory.eu"}.}
 
+\item{add_obs_status}{Defaults to \code{TRUE}, when missing \code{obs_status} is added with
+\code{\link{add_observation_status}}.}
+
 \item{n}{The number of observations to print.}
+}
+\value{
+A validated dataset object.
 }
 \description{
 The class inherits all methods from a data frame, but has

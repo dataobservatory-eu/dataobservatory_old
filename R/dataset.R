@@ -19,6 +19,9 @@
 #' @param unit A standardized unit id.
 #' @param unit_name A unit name.
 #' @param source A source, currently defaults to \code{"greendeal.dataobservatory.eu"}.
+#' @param add_obs_status Defaults to \code{TRUE}, when missing \code{obs_status} is added with
+#' \code{\link{add_observation_status}}.
+#' @return A validated dataset object.
 #' @importFrom assertthat assert_that
 #' @importFrom tibble as_tibble
 #' @importFrom stringr word
@@ -46,7 +49,8 @@ dataset <- function(x,
                     unit,
                     unit_name,
                     source = "greendeal.dataobservatory.eu",
-                    doi = NULL) {
+                    doi = NULL,
+                    add_obs_status = TRUE ) {
 
 
   assertthat::assert_that(inherits(x, "data.frame"),
@@ -57,25 +61,41 @@ dataset <- function(x,
     x <- rename (x, value = .data$values)
   }
 
+  if ( add_obs_status == TRUE ) {
+    ## Add missing obs_status and method columns, if they are not present
+    x <- add_observation_status(x)
+  } else {
+    validate_dataframe(x)
+  }
+
   new_dataset (x = x,
-               dataset_code = dataset_code,
+               dataset_code  = dataset_code,
                dataset_title = dataset_title,
                freq = freq,
                unit = unit,
-               unit_name = unit_name,
-               source=source,
+               unit_name     = unit_name,
+               source        = source,
                doi = doi)
 
 }
 
-
-validate_data <- function ( dat ) {
+#' @title Validate a data frame
+#' @importFrom assertthat assert_that
+#' @keywords internal
+validate_dataframe <- function ( dat ) {
 
   assert_that(inherits(dat, "data.frame"),
               msg = "dat must be a data.frame or inherited from data.frame."
               )
 
-  all (c("dataset_id", "geo", "time", "value", "type", "method") %in% names(dat))
+  mandatory_vars <- c("time", "geo", "value",
+                      "obs_status", "method")
+
+  missing_vars <- mandatory_vars [which(!mandatory_vars %in% names(dat))]
+  missing_text <- paste(missing_vars, collapse = ", ", sep = ", ")
+
+  assert_that( length(missing_vars)==0,
+               msg = glue::glue ( "Missing variables in the dataset: {missing_text}."))
 
   assert_that(inherits(dat, "data.frame"),
               msg = "dat must be a data.frame or inherited from data.frame."
@@ -99,18 +119,11 @@ validate_data <- function ( dat ) {
                 )
   }
 
-  valid_value_types <- c("actual", "estimated", "calculated", "missing")
-  valid_methods <- c("actual", "missing", "imputed", "forecasted" )
+  valid_obs_status <- cl_obs_status()$id
+  valid_obs_status_string <- paste(valid_obs_status, collapse = "', '")
 
-  valid_values_string <- paste(valid_value_types, collapse = "', '")
-  valid_method_string <- paste(valid_methods, collapse = "', '")
-
-  assert_that ( all( dat$type %in% valid_value_types),
-                msg = glue::glue("Valid value types are '{valid_values_string}'.") )
-
-  assert_that ( all( stringr::word( dat$method, 1,1, sep = "_") %in% valid_methods),
-                msg = glue::glue("Valid value types start with  any of '{valid_method_string}'.")
-                  )
+  assert_that ( all( dat$obs_status %in% valid_obs_status),
+                msg = glue::glue("Valid value types are '{valid_obs_status_string }'.") )
 
 }
 
@@ -191,11 +204,6 @@ new_dataset <- function(x,
                       "obs_status", "method", "freq")))
 
   new_dataset$unit        <- unit
-  new_dataset$obs_status  <- case_when(
-    is.na(new_dataset$value) ~ "O",
-    !is.na(new_dataset$obs_status) ~ new_dataset$obs_status,
-    is.na(new_dataset$obs_status) & !is.na(new_dataset$value) ~ "A",
-    TRUE ~ "<unknown>")
   new_dataset$freq        <- freq
   attr(new_dataset, "dataset_code") <- dataset_code
   attr(new_dataset, "Title") <- dataset_title

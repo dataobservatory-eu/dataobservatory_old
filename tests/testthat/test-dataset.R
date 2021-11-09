@@ -1,7 +1,7 @@
 data("small_population")
 
 small_population_dataset <- dataset (
-  x= small_population,
+  x = small_population,
   dataset_code = "small_population_total",
   dataset_title = "Population of Small European Countries",
   freq = "A",

@@ -4,7 +4,7 @@
 #'
 #' @param x A dataset in wide format.
 #' @return A new data frame with the largest complete subset.
-#' @exaples{
+#' @examples{
 #' tr1 <- data.frame (
 #'     time = c(2010:2020),
 #'     AT = c(NA, 1:10),

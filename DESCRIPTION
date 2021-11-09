@@ -21,13 +21,19 @@ RoxygenNote: 7.1.2
 Imports: 
     assertthat,
     dplyr,
+    eurostat,
+    forecast,
+    glue,
     jsonlite,
+    lubridate,
     magrittr,
     purrr,
     rlang,
+    snakecase,
     stringr,
     tibble,
     tidyr,
+    timetk,
     utils,
     zoo
 Suggests: 

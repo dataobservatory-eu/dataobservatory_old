@@ -39,7 +39,7 @@ attributes (small_population_dataset)
 
 The `datacite_dataset()` function fills out the `datacite` object with default properties. There are some properties where no default is given, these properties are also recorded in the `dataset` class as attributes.
 
-```{r}
+```{r cite}
 small_population_datacite <- datacite_dataset(
   dataset = small_population_dataset,
   keywords = c("greendeal", "Demography", "Testing"),
@@ -85,17 +85,19 @@ jane
 
 There are many Properties which can form a list.  For example, there may be several related items present.
 
-```{r}
+```{r, eval=FALSE}
 relitems <- add_related_items(
   RelatedItem = "Population on 1 January by age and sex", 
   relatedItemIdentifier = add_identifiers(
     id = "demo_pjan", 
+    relatedItemType = "Dataset",
+    relatedItemIdentifierType = "URL",
     URI = "https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=demo_pjan/"
   ))
 
 relitems
 ```
-```{r}
+```{r, eval=FALSE}
 package_citation <- citation("dataobservatory")
 relitems <- add_related_items(
   RelatedItem = package_citation$title, 
@@ -117,12 +119,12 @@ relitems
 print(small_population_datacite)
 ```
 
-```{r}
+```{r, eval=FALSE}
 small_population_datacite$RelatedItem <- create_json_text(as.list(relitems))
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 small_population_datacite
 ```
 

@@ -320,7 +320,7 @@ dataset_forecast <- function (dataset, forecast_periods = NULL) {
 
 
   new_forecasted_values <- forecast_values_df %>%
-    mutate ( obs_status = 'E') %>%
+    mutate ( obs_status = 'F') %>%
     left_join (
       forecast_methods_df,
       by = "geo")   %>%
@@ -437,7 +437,7 @@ dataset_backcast <- function (dataset, backcast_periods = NULL) {
 
 
   new_forecasted_values <- forecast_values_df %>%
-    mutate ( obs_status = 'E') %>%
+    mutate ( obs_status = 'F') %>%
     left_join (
       forecast_methods_df,
       by = "geo")   %>%
