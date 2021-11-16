@@ -56,6 +56,10 @@ dataset <- function(x,
   assertthat::assert_that(inherits(x, "data.frame"),
                           msg = "x must be a data.frame or inherited from data.frame.")
 
+  assert_that(nrow(x)>0,
+              msg = "dat must have at least one observation."
+  )
+
 
   if ( "values" %in% names(x)) {
     x <- rename (x, value = .data$values)
@@ -87,6 +91,11 @@ validate_dataframe <- function ( dat ) {
   assert_that(inherits(dat, "data.frame"),
               msg = "dat must be a data.frame or inherited from data.frame."
               )
+
+  assert_that(nrow(dat)>0,
+              msg = "dat must have at least one observation."
+  )
+
 
   mandatory_vars <- c("time", "geo", "value",
                       "obs_status", "method")

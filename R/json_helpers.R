@@ -6,7 +6,7 @@
 #' create_json_text (list (id="test_id"))
 #' @export
 create_json_text <- function ( list_to_json ) {
-  jsonlite::toJSON(list_to_json)
+  jsonlite::toJSON(list_to_json, Date = "ISO8601")
 
 }
 
