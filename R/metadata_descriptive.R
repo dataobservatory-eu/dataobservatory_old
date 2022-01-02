@@ -225,7 +225,7 @@ add_description <- function (
   assertthat::assert_that( (is.null(Other)) | (length(Other)==1),
                            msg = "The Other property must be a single character string.")
 
-  Description = list ( Abstract = Abstract )
+  Description = tibble ( Abstract = Abstract )
   if(!is.null(Methods)) Description$Methods <- Methods
   if(!is.null(SeriesInformation)) Description$SeriesInformation <- SeriesInformation
   if(!is.null(TableOfContents)) Description$TableOfContents<-TableOfContents
@@ -233,7 +233,12 @@ add_description <- function (
   if(!is.null(Other)) Description$Other <- Other
 
   if ( format == "json") {
-    jsonlite::toJSON(Description)
+    jsonlite::toJSON(Description, Date = "ISO8601", auto_unbox=TRUE)
+    tmp_json <- tempfile()
+
+    writeLines(description_json, tmp_json, useBytes = F)
+    readLines(tmp_json  )
+
   } else {
     Description
   }

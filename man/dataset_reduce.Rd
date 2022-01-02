@@ -4,16 +4,24 @@
 \alias{dataset_reduce}
 \title{Reduce dataset}
 \usage{
-dataset_reduce(x)
+dataset_reduce(x, return = "info")
 }
 \arguments{
 \item{x}{A dataset in wide format.}
+
+\item{return}{Any of \code{'data'} for the largest congruent dataset, \code{'info'} for the
+properties of the largest congruent dataset, or \code{'both'.}}
 }
 \value{
-A new data frame with the largest complete subset.
+A new data frame with the largest congruent dataset, or a info about the congruent dataset,
+or a list containing both outputs.
 }
 \description{
-Find the largest complete subset of the dataset.
+Find the largest congruent sub-dataset of the dataset.
+}
+\details{
+The largest congruent sub-dataset of a dataset is the largest martrix of time and geo
+obersvations that do not contain missing values.
 }
 \examples{
 {
@@ -25,6 +33,6 @@ tr1 <- data.frame (
     DK = c(rep(NA,10), 1),
     EL = c(rep(NA, 11))
 )
-dataset_reduce(tr1)
+dataset_reduce(tr1, return = "both")
 }
 }

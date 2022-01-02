@@ -83,7 +83,9 @@ add_frequency <- function(id, admin_format = 'id') {
 #' @export
 add_unit <- function(id, name, admin_format = 'id', validate = FALSE) {
 
-  add_admin_metadata(id, name,  .f = 'cl_unit_not_validated', admin_format = admin_format)
+  add_admin_metadata(id, name,
+                     .f = 'cl_unit_not_validated',
+                     admin_format = admin_format)
 }
 
 #' @title Add observation status
@@ -100,24 +102,38 @@ add_unit <- function(id, name, admin_format = 'id', validate = FALSE) {
 #' @export
 
 add_obs <- function(id, admin_format = 'id') {
-  add_admin_metadata(id, .f='cl_obs_status', admin_format = admin_format)
+
+  add_admin_metadata(id,
+                     .f='cl_obs_status',
+                     admin_format = admin_format)
 }
 
 #' @title Add session information
 #'
 #' @description Converts \code{\link{[utils](sessionInfo)}} into a JSON text.
 #' @importFrom utils sessionInfo
+#' @importFrom tibble enframe
 #' @importFrom jsonlite toJSON
+#' @importFrom tidyr unite
 #' @return A JSON text.
 #' @export
 add_sessioninfo <- function() {
   si <- sessionInfo()
-  jsonlite::toJSON ( si [vapply (si, is.character, logical(1))])
-}
+  tmp_si <- si [vapply (si, is.character, logical(1))]
+
+  tibble::enframe(unlist(tmp_si),
+          name = 'session_variable') %>%
+    jsonlite::toJSON(flatten = TRUE)
+
+  #jsonlite::toJSON ( tmp_df, flatten = TRUE, auto_unbox = TRUE )
+
+  #jsonlite::toJSON ( si [vapply (si, is.character, logical(1))], flatten = TRUE, auto_unbox = TRUE)
+
+    }
 
 #' @importFrom tibble tribble
 #' @importFrom jsonlite toJSON
-#' @keywords interna
+#' @keywords internal
 cl_freq <- function(...) {
 
   cl_freq <- tibble::tribble(
@@ -170,7 +186,8 @@ cl_freq <- function(...) {
                 relatedItemIdentifierType = "URL",
                 relatedItemIdentifier = "https://sdmx.org/?page_id=3215/" )
     )
-  cl_freq$RelatedItem <-  as.character(jsonlite::toJSON(related_iso_identifier))
+  cl_freq$RelatedItem <-  jsonlite::toJSON(related_iso_identifier,
+                                           Date = "ISO8601")
 
   cl_freq
 }
@@ -197,7 +214,7 @@ cl_obs_status <- function(...) {
   related_codebook <- tibble(RelatedItem = "SDMX Code List for Observation Status",
                     relationType = "IsDocumentedBy",
                     relatedItemIdentifier = "https://sdmx.org/?sdmx_news=new-version-of-code-list-for-observation-status-version-2-2/",
-                    relatedItemIdentifierType = "URL") %>% jsonlite::toJSON() %>% as.character()
+                    relatedItemIdentifierType = "URL") %>% jsonlite::toJSON()
 
   obs_status$RelatedItem <- related_codebook
 
